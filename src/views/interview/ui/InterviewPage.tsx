@@ -1,0 +1,75 @@
+'use client';
+
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { usePayment } from '@/features/payment';
+import { useAppMachine } from '@/app/providers';
+import { LoadingState, ErrorState, UsedState } from './InterviewStates';
+
+type PageState = 'loading' | 'verifying' | 'ready' | 'error' | 'used';
+
+export const InterviewPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { send } = useAppMachine();
+  const { verifyPayment, completeSession, status, error } = usePayment();
+  const [pageState, setPageState] = useState<PageState>('loading');
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const hasStartedInterview = useRef(false);
+
+  useEffect(() => {
+    const id = searchParams.get('session_id');
+    if (!id) { router.push('/'); return; }
+
+    setSessionId(id);
+    setPageState('verifying');
+
+    verifyPayment(id).then((isPaid) => {
+      if (isPaid) {
+        setPageState('ready');
+        if (!hasStartedInterview.current) {
+          hasStartedInterview.current = true;
+          send({ type: 'START_INTERVIEW', sessionId: id });
+        }
+      } else {
+        setPageState(status === 'used' ? 'used' : 'error');
+      }
+    });
+  }, [searchParams, router, verifyPayment, status, send]);
+
+  const handleComplete = useCallback(() => {
+    if (sessionId) {
+      completeSession(sessionId);
+      router.push(`/results?session_id=${sessionId}`);
+    }
+  }, [sessionId, completeSession, router]);
+
+  const goHome = useCallback(() => router.push('/'), [router]);
+
+  if (pageState === 'loading' || pageState === 'verifying') return <LoadingState />;
+  if (pageState === 'used') return <UsedState onBuyNew={goHome} />;
+  if (pageState === 'error') return <ErrorState error={error} onBack={goHome} />;
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50">
+      <div className="max-w-2xl w-full text-center space-y-8">
+        <div className="bg-green-100 text-green-800 px-4 py-2 rounded-full inline-block">
+          Pago verificado
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900">Tu Entrevista</h1>
+        <div className="text-6xl font-mono font-bold text-primary-600">10:00</div>
+        <div className="p-8 border-2 border-dashed border-gray-300 rounded-lg bg-white">
+          <p className="text-gray-500">Interview Panel se renderizará aquí</p>
+        </div>
+        <div className="flex justify-center">
+          <button className="w-24 h-24 rounded-full bg-primary-600 hover:bg-primary-700 text-white font-semibold transition-default shadow-lg">
+            REC
+          </button>
+        </div>
+        <button onClick={handleComplete} className="mt-8 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-default">
+          [DEV] Completar entrevista
+        </button>
+      </div>
+    </main>
+  );
+};

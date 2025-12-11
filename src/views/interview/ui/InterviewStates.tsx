@@ -1,0 +1,63 @@
+'use client';
+
+type StateLayoutProps = {
+  children: React.ReactNode;
+};
+
+const StateLayout = ({ children }: StateLayoutProps) => (
+  <main className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="text-center space-y-4 max-w-md">{children}</div>
+  </main>
+);
+
+export const LoadingState = () => (
+  <StateLayout>
+    <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto" />
+    <p className="text-gray-600">Verificando tu pago...</p>
+  </StateLayout>
+);
+
+type ErrorStateProps = {
+  error: string | null;
+  onBack: () => void;
+};
+
+export const ErrorState = ({ error, onBack }: ErrorStateProps) => (
+  <StateLayout>
+    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+      <span className="text-3xl">X</span>
+    </div>
+    <h1 className="text-2xl font-bold text-gray-900">Error de verificación</h1>
+    <p className="text-gray-600">
+      {error || 'No pudimos verificar tu pago. Por favor, intenta nuevamente.'}
+    </p>
+    <button
+      onClick={onBack}
+      className="mt-4 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-default"
+    >
+      Volver al inicio
+    </button>
+  </StateLayout>
+);
+
+type UsedStateProps = {
+  onBuyNew: () => void;
+};
+
+export const UsedState = ({ onBuyNew }: UsedStateProps) => (
+  <StateLayout>
+    <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
+      <span className="text-3xl">!</span>
+    </div>
+    <h1 className="text-2xl font-bold text-gray-900">Sesión ya utilizada</h1>
+    <p className="text-gray-600">
+      Esta sesión de pago ya fue utilizada para una entrevista.
+    </p>
+    <button
+      onClick={onBuyNew}
+      className="mt-4 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-default"
+    >
+      Comprar nueva sesión
+    </button>
+  </StateLayout>
+);
