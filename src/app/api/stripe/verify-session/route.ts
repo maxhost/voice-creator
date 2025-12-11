@@ -23,10 +23,11 @@ export async function GET(request: NextRequest) {
     const stripeSession = await stripe.checkout.sessions.retrieve(sessionId);
     if (stripeSession.payment_status === 'paid') {
       const now = new Date().toISOString();
+      const email = stripeSession.customer_details?.email || null;
       if (session) {
-        await supabase.from('payment_sessions').update({ status: 'paid', paid_at: now }).eq('stripe_session_id', sessionId);
+        await supabase.from('payment_sessions').update({ status: 'paid', paid_at: now, customer_email: email }).eq('stripe_session_id', sessionId);
       } else {
-        await supabase.from('payment_sessions').insert({ stripe_session_id: sessionId, status: 'paid', amount: stripeSession.amount_total || 399, paid_at: now, used_at: null });
+        await supabase.from('payment_sessions').insert({ stripe_session_id: sessionId, status: 'paid', amount: stripeSession.amount_total || 399, paid_at: now, customer_email: email, used_at: null });
       }
       return json({ status: 'paid', sessionId });
     }

@@ -8,34 +8,48 @@ import { LoadingState, ErrorState, UsedState } from './InterviewStates';
 
 type PageState = 'loading' | 'verifying' | 'ready' | 'error' | 'used';
 
+const MAX_RETRIES = 10;
+const RETRY_DELAY = 1500; // 1.5 seconds
+
 export const InterviewPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { send } = useAppMachine();
-  const { verifyPayment, completeSession, status, error } = usePayment();
+  const { verifyPayment, completeSession, error } = usePayment();
   const [pageState, setPageState] = useState<PageState>('loading');
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const hasStartedInterview = useRef(false);
+  const verificationStarted = useRef(false);
 
   useEffect(() => {
     const id = searchParams.get('session_id');
     if (!id) { router.push('/'); return; }
+    if (verificationStarted.current) return;
 
+    verificationStarted.current = true;
     setSessionId(id);
     setPageState('verifying');
 
-    verifyPayment(id).then((isPaid) => {
-      if (isPaid) {
+    let retries = 0;
+    const verify = async (): Promise<void> => {
+      const result = await verifyPayment(id);
+
+      if (result) {
         setPageState('ready');
-        if (!hasStartedInterview.current) {
-          hasStartedInterview.current = true;
-          send({ type: 'START_INTERVIEW', sessionId: id });
-        }
-      } else {
-        setPageState(status === 'used' ? 'used' : 'error');
+        send({ type: 'START_INTERVIEW', sessionId: id });
+        return;
       }
-    });
-  }, [searchParams, router, verifyPayment, status, send]);
+
+      // If payment pending and retries left, try again
+      retries++;
+      if (retries < MAX_RETRIES) {
+        setTimeout(verify, RETRY_DELAY);
+      } else {
+        setPageState('error');
+      }
+    };
+
+    verify();
+  }, [searchParams, router, verifyPayment, send]);
 
   const handleComplete = useCallback((ideasGenerated: number = 0) => {
     if (sessionId) {
