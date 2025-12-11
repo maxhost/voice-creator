@@ -3,40 +3,45 @@ import { useAppMachine } from '@/app/providers';
 export const useInterview = () => {
   const { state, send, context } = useAppMachine();
 
-  const startInterview = (sessionId: string) => {
-    send({ type: 'START_INTERVIEW', sessionId });
+  const startRecording = () => send({ type: 'START_RECORDING' });
+  const stopRecording = (audioBlob: Blob) => send({ type: 'STOP_RECORDING', audioBlob });
+
+  const onTranscriptionComplete = (transcript: string, topics: string[]) => {
+    send({ type: 'TRANSCRIPTION_COMPLETE', transcript, topics });
   };
 
-  const startRecording = () => {
-    send({ type: 'START_RECORDING' });
+  const onAIResponseReady = (response: string, audioUrl: string) => {
+    send({ type: 'AI_RESPONSE_READY', response, audioUrl });
   };
 
-  const stopRecording = (audioBlob: Blob) => {
-    send({ type: 'STOP_RECORDING', audioBlob });
-  };
+  const onAudioComplete = () => send({ type: 'AUDIO_PLAYBACK_COMPLETE' });
+  const onTimerTick = () => send({ type: 'TIMER_TICK' });
+  const onTimerEnd = () => send({ type: 'TIMER_END' });
 
-  const isWaitingForUser = state.matches('interview.waitingForUser');
-  const isRecording = state.matches('interview.recording');
-  const isProcessing = state.matches('interview.processing');
-  const isAiResponding = state.matches('interview.aiResponding');
-  const isPlayingResponse = state.matches('interview.playingResponse');
-  const isClosing = state.matches('interview.closing');
-  const isFinalResponse = state.matches('interview.finalResponse');
+  const setError = (error: { code: string; message: string; retryable: boolean }) => {
+    send({ type: 'SET_ERROR', error });
+  };
 
   return {
     turns: context.interview.turns,
     topics: context.interview.topics,
     timeRemaining: context.interview.timeRemaining,
     lastSpeaker: context.interview.lastSpeaker,
-    isWaitingForUser,
-    isRecording,
-    isProcessing,
-    isAiResponding,
-    isPlayingResponse,
-    isClosing,
-    isFinalResponse,
-    startInterview,
+    currentAudioUrl: context.interview.currentAudioUrl,
+    isWaitingForUser: state.matches('interview.waitingForUser'),
+    isRecording: state.matches('interview.recording'),
+    isTranscribing: state.matches('interview.transcribing'),
+    isAiResponding: state.matches('interview.aiResponding'),
+    isPlayingResponse: state.matches('interview.playingResponse'),
+    isClosing: state.matches('interview.closing'),
+    isFinalResponse: state.matches('interview.finalResponse'),
     startRecording,
     stopRecording,
+    onTranscriptionComplete,
+    onAIResponseReady,
+    onAudioComplete,
+    onTimerTick,
+    onTimerEnd,
+    setError,
   };
 };

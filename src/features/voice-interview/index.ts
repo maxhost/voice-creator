@@ -8,6 +8,7 @@ export { ThinkingIndicator } from './ui/ThinkingIndicator';
 // Hooks
 export { useAudioRecording } from './model/useAudioRecording';
 export { useInterview } from './model/useInterview';
+export { useVoiceFlow } from './model/useVoiceFlow';
 
 // Types
 export type {

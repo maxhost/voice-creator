@@ -1,28 +1,28 @@
 'use client';
 
-import { useCallback } from 'react';
-import { useInterview, useAudioRecording } from '@/features/voice-interview';
+import { useCallback, useEffect, useRef } from 'react';
+import { useVoiceFlow, useAudioRecording } from '@/features/voice-interview';
 
 export const useInterviewPanel = () => {
   const {
     turns,
     timeRemaining,
+    currentAudioUrl,
     isWaitingForUser,
     isRecording: machineIsRecording,
-    isProcessing,
+    isTranscribing,
     isAiResponding,
     isPlayingResponse,
     startRecording: machineStartRecording,
     stopRecording: machineStopRecording,
-  } = useInterview();
+    processRecording,
+    playAudio,
+  } = useVoiceFlow();
 
-  const {
-    isRecording: audioIsRecording,
-    start: startAudioRecording,
-    stop: stopAudioRecording,
-  } = useAudioRecording();
+  const { isRecording: audioIsRecording, start: startAudioRecording, stop: stopAudioRecording } = useAudioRecording();
+  const isProcessingRef = useRef(false);
 
-  const canRecord = isWaitingForUser && !isProcessing && !isAiResponding && !isPlayingResponse;
+  const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse;
 
   const handleStartRecording = useCallback(async () => {
     if (!canRecord) return;
@@ -32,16 +32,26 @@ export const useInterviewPanel = () => {
 
   const handleStopRecording = useCallback(async () => {
     const blob = await stopAudioRecording();
-    if (blob) {
+    if (blob && !isProcessingRef.current) {
+      isProcessingRef.current = true;
       machineStopRecording(blob);
+      await processRecording(blob);
+      isProcessingRef.current = false;
     }
-  }, [stopAudioRecording, machineStopRecording]);
+  }, [stopAudioRecording, machineStopRecording, processRecording]);
+
+  // Auto-play AI response when ready
+  useEffect(() => {
+    if (isPlayingResponse && currentAudioUrl) {
+      playAudio(currentAudioUrl);
+    }
+  }, [isPlayingResponse, currentAudioUrl, playAudio]);
 
   return {
     turns,
     timeRemaining,
     isRecording: audioIsRecording || machineIsRecording,
-    isProcessing,
+    isTranscribing,
     isAiResponding,
     isPlayingResponse,
     canRecord,

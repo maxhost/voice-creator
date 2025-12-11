@@ -8,7 +8,7 @@ export const InterviewPanel = () => {
     turns,
     timeRemaining,
     isRecording,
-    isProcessing,
+    isTranscribing,
     isAiResponding,
     isPlayingResponse,
     canRecord,
@@ -16,32 +16,31 @@ export const InterviewPanel = () => {
     handleStopRecording,
   } = useInterviewPanel();
 
-  const showThinking = isProcessing || isAiResponding;
+  const showThinking = isTranscribing || isAiResponding;
+
+  const getStatusMessage = () => {
+    if (isTranscribing) return 'Transcribiendo...';
+    if (isAiResponding) return 'Generando respuesta...';
+    return '';
+  };
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
-      {/* Timer */}
       <div className="text-center">
         <TimerDisplay timeRemaining={timeRemaining} />
       </div>
 
-      {/* Transcript */}
-      <div className="border rounded-lg p-4 min-h-[200px]">
+      <div className="border rounded-lg p-4 min-h-[200px] bg-white">
         <TranscriptDisplay turns={turns} />
       </div>
 
-      {/* Status indicators */}
       <div className="h-8 flex items-center justify-center">
-        <ThinkingIndicator
-          isVisible={showThinking}
-          message={isAiResponding ? 'Generando respuesta...' : 'Procesando audio...'}
-        />
+        <ThinkingIndicator isVisible={showThinking} message={getStatusMessage()} />
         {isPlayingResponse && (
-          <span className="text-sm text-primary-600">Reproduciendo respuesta...</span>
+          <span className="text-sm text-primary-600 animate-pulse">Reproduciendo...</span>
         )}
       </div>
 
-      {/* Record button */}
       <div className="flex justify-center">
         <RecordButton
           isRecording={isRecording}
@@ -51,11 +50,8 @@ export const InterviewPanel = () => {
         />
       </div>
 
-      {/* Instructions */}
       <p className="text-center text-sm text-gray-500">
-        {canRecord
-          ? 'Mantén presionado para hablar'
-          : 'Espera a que la IA termine de responder'}
+        {canRecord ? 'Mantén presionado para hablar' : 'Espera a que la IA termine'}
       </p>
     </div>
   );

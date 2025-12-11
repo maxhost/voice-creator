@@ -64,11 +64,11 @@ export const appMachine = createMachine({
         recording: {
           on: {
             STOP_RECORDING: {
-              target: 'processing',
+              target: 'transcribing',
             },
           },
         },
-        processing: {
+        transcribing: {
           on: {
             TRANSCRIPTION_COMPLETE: {
               target: 'aiResponding',
@@ -76,7 +76,16 @@ export const appMachine = createMachine({
                 interview: ({ context, event }) => ({
                   ...context.interview,
                   lastSpeaker: 'user' as const,
-                  // Turn will be added by the service
+                  turns: [
+                    ...context.interview.turns,
+                    {
+                      id: `turn-${Date.now()}`,
+                      speaker: 'user' as const,
+                      transcript: event.transcript,
+                      timestamp: Date.now(),
+                      extractedTopics: event.topics,
+                    },
+                  ],
                 }),
               }),
             },
@@ -97,6 +106,16 @@ export const appMachine = createMachine({
                   ...context.interview,
                   lastSpeaker: 'ai' as const,
                   currentAudioUrl: event.audioUrl,
+                  turns: [
+                    ...context.interview.turns,
+                    {
+                      id: `turn-${Date.now()}`,
+                      speaker: 'ai' as const,
+                      transcript: event.response,
+                      timestamp: Date.now(),
+                      extractedTopics: [],
+                    },
+                  ],
                 }),
               }),
             },
