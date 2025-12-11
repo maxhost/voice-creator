@@ -34,8 +34,8 @@ export const usePayment = () => {
     return true;
   }, []);
 
-  const completeSession = useCallback(async (sessionId: string) => {
-    const result = await markSessionUsed(sessionId);
+  const completeSession = useCallback(async (sessionId: string, ideasGenerated: number) => {
+    const result = await markSessionUsed({ sessionId, ideasGenerated });
     if (!result.ok) console.error('Failed to mark session:', result.error.message);
     setState((s) => ({ ...s, status: 'used' }));
   }, []);

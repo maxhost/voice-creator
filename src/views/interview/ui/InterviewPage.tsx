@@ -37,9 +37,9 @@ export const InterviewPage = () => {
     });
   }, [searchParams, router, verifyPayment, status, send]);
 
-  const handleComplete = useCallback(() => {
+  const handleComplete = useCallback((ideasGenerated: number = 0) => {
     if (sessionId) {
-      completeSession(sessionId);
+      completeSession(sessionId, ideasGenerated);
       router.push(`/results?session_id=${sessionId}`);
     }
   }, [sessionId, completeSession, router]);
@@ -66,8 +66,8 @@ export const InterviewPage = () => {
             REC
           </button>
         </div>
-        <button onClick={handleComplete} className="mt-8 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-default">
-          [DEV] Completar entrevista
+        <button onClick={() => handleComplete(5)} className="mt-8 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-default">
+          [DEV] Completar entrevista (5 ideas)
         </button>
       </div>
     </main>

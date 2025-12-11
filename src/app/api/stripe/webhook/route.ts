@@ -24,14 +24,17 @@ export async function POST(request: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const now = new Date().toISOString();
+    const email = session.customer_details?.email || null;
 
     const { error: updateErr } = await supabase.from('payment_sessions')
-      .update({ status: 'paid', paid_at: now }).eq('stripe_session_id', session.id);
+      .update({ status: 'paid', paid_at: now, customer_email: email })
+      .eq('stripe_session_id', session.id);
 
     if (updateErr) {
       await supabase.from('payment_sessions').insert({
         stripe_session_id: session.id, status: 'paid',
-        amount: session.amount_total || 399, paid_at: now, used_at: null,
+        amount: session.amount_total || 399, paid_at: now,
+        customer_email: email, used_at: null,
       });
     }
   }

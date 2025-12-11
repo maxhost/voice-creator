@@ -10,6 +10,8 @@ export type PaymentSession = {
   stripe_session_id: string;
   status: PaymentSessionStatus;
   amount: number;
+  customer_email: string | null;
+  ideas_generated: number;
   created_at: string;
   paid_at: string | null;
   used_at: string | null;
@@ -19,14 +21,16 @@ export type PaymentSessionInsert = {
   stripe_session_id: string;
   status: PaymentSessionStatus;
   amount: number;
+  customer_email?: string | null;
+  ideas_generated?: number;
   paid_at?: string | null;
   used_at?: string | null;
 };
 
 export type PaymentSessionUpdate = {
-  stripe_session_id?: string;
   status?: PaymentSessionStatus;
-  amount?: number;
+  customer_email?: string | null;
+  ideas_generated?: number;
   paid_at?: string | null;
   used_at?: string | null;
 };
