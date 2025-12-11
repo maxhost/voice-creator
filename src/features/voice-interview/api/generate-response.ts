@@ -2,7 +2,7 @@ import type { Result } from '@/shared/lib';
 
 type Turn = { role: 'user' | 'ai'; content: string };
 type GenerateParams = { transcript: string; conversationHistory: Turn[] };
-type GenerateResult = { response: string; topics: string[] };
+type GenerateResult = { response: string; topics: string[]; language: string };
 type GenerateError = { code: 'AI_RESPONSE_FAILED'; message: string };
 
 export const generateAIResponse = async (
@@ -24,7 +24,10 @@ export const generateAIResponse = async (
     }
 
     const data = await response.json();
-    return { ok: true, data: { response: data.response, topics: data.topics || [] } };
+    return {
+      ok: true,
+      data: { response: data.response, topics: data.topics || [], language: data.language || 'es' },
+    };
   } catch (error) {
     return {
       ok: false,

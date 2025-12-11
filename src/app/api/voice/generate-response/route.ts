@@ -16,7 +16,9 @@ Reglas:
 - Si detectas un tema interesante, profundiza en él
 - Guía la conversación hacia ideas que puedan convertirse en contenido
 
-Al final de tu respuesta, añade una línea con "TEMAS:" seguida de 1-3 temas clave separados por comas.`;
+Al final de tu respuesta, añade dos líneas:
+1. "TEMAS:" seguida de 1-3 temas clave separados por comas
+2. "IDIOMA:" seguido del código ISO del idioma (es, en, fr, de, pt, it)`;
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,10 +49,21 @@ export async function POST(request: NextRequest) {
     });
 
     const fullResponse = completion.choices[0]?.message?.content || '';
-    const [response, topicsLine] = fullResponse.split('TEMAS:');
-    const topics = topicsLine?.split(',').map((t) => t.trim()).filter(Boolean) || [];
 
-    return json({ response: response.trim(), topics });
+    // Parse response, topics, and language
+    const lines = fullResponse.split('\n');
+    const temasIndex = lines.findIndex(l => l.startsWith('TEMAS:'));
+    const idiomaIndex = lines.findIndex(l => l.startsWith('IDIOMA:'));
+
+    const response = lines.slice(0, temasIndex > -1 ? temasIndex : undefined).join('\n').trim();
+    const topics = temasIndex > -1
+      ? lines[temasIndex].replace('TEMAS:', '').split(',').map(t => t.trim()).filter(Boolean)
+      : [];
+    const language = idiomaIndex > -1
+      ? lines[idiomaIndex].replace('IDIOMA:', '').trim().toLowerCase()
+      : 'es';
+
+    return json({ response, topics, language });
   } catch (error) {
     console.error('Generate response error:', error);
     return json({ error: 'Failed to generate response' }, { status: 500 });

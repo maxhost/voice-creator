@@ -37,13 +37,13 @@ export const useVoiceFlow = () => {
       return;
     }
 
-    const { response, topics } = aiResult.data;
+    const { response, topics, language } = aiResult.data;
 
     // Update state with transcript and topics
     onTranscriptionComplete(transcript, topics);
 
-    // Step 3: Convert to speech
-    const ttsResult = await textToSpeech(response);
+    // Step 3: Convert to speech (with language-specific voice)
+    const ttsResult = await textToSpeech(response, language);
     if (!ttsResult.ok) {
       setError({ code: 'TTS_FAILED', message: ttsResult.error.message, retryable: true });
       return;

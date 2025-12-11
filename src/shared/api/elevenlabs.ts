@@ -7,7 +7,17 @@ import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
  */
 let elevenlabsClient: ElevenLabsClient | null = null;
 
-const DEFAULT_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // Rachel - natural female voice
+// Voice IDs for different languages (all multilingual-compatible)
+const VOICE_BY_LANGUAGE: Record<string, string> = {
+  es: '21m00Tcm4TlvDq8ikWAM', // Rachel - works great for Spanish
+  en: 'pNInz6obpgDQGcFmaJgB', // Adam - natural English
+  fr: 'ThT5KcBeYPX3keUQqHPh', // Nicole - French-friendly
+  de: 'VR6AewLTigWG4xSOukaG', // Arnold - German-friendly
+  pt: '21m00Tcm4TlvDq8ikWAM', // Rachel - works for Portuguese
+  it: 'ThT5KcBeYPX3keUQqHPh', // Nicole - Italian-friendly
+};
+
+const DEFAULT_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'; // Rachel
 
 export const getElevenLabs = (): ElevenLabsClient => {
   if (elevenlabsClient) return elevenlabsClient;
@@ -21,6 +31,14 @@ export const getElevenLabs = (): ElevenLabsClient => {
   return elevenlabsClient;
 };
 
-export const getVoiceId = (): string => {
-  return process.env.ELEVENLABS_VOICE_ID || DEFAULT_VOICE_ID;
+export const getVoiceId = (language?: string): string => {
+  // Allow env override for any language
+  if (process.env.ELEVENLABS_VOICE_ID) {
+    return process.env.ELEVENLABS_VOICE_ID;
+  }
+  // Select voice based on detected language
+  if (language && VOICE_BY_LANGUAGE[language]) {
+    return VOICE_BY_LANGUAGE[language];
+  }
+  return DEFAULT_VOICE_ID;
 };

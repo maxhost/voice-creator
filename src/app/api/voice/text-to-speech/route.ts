@@ -3,14 +3,14 @@ import { getElevenLabs, getVoiceId } from '@/shared/api/elevenlabs';
 
 export async function POST(request: NextRequest) {
   try {
-    const { text } = await request.json() as { text: string };
+    const { text, language } = await request.json() as { text: string; language?: string };
 
     if (!text) {
       return NextResponse.json({ error: 'Missing text' }, { status: 400 });
     }
 
     const client = getElevenLabs();
-    const voiceId = getVoiceId();
+    const voiceId = getVoiceId(language);
 
     const audioStream = await client.textToSpeech.convert(voiceId, {
       text,
