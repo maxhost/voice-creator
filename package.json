@@ -10,7 +10,6 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@elevenlabs/elevenlabs-js": "^2.27.0",
     "@supabase/supabase-js": "^2.87.1",
     "@xstate/react": "4.1.3",
     "clsx": "2.1.1",

@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getElevenLabs, getVoiceId } from '@/shared/api/elevenlabs';
+import { getOpenAI } from '@/shared/api/openai';
+
+// OpenAI TTS voices - no concurrency limits
+const VOICE_BY_LANGUAGE: Record<string, string> = {
+  es: 'nova',    // Warm female, great for Spanish
+  en: 'onyx',    // Deep male, natural English
+  fr: 'shimmer', // Soft female, good for French
+  de: 'onyx',    // Deep male, works for German
+  pt: 'nova',    // Warm female, good for Portuguese
+  it: 'shimmer', // Soft female, good for Italian
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,24 +19,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing text' }, { status: 400 });
     }
 
-    const client = getElevenLabs();
-    const voiceId = getVoiceId(language);
+    const openai = getOpenAI();
+    const voice = (language && VOICE_BY_LANGUAGE[language]) || 'nova';
 
-    const audioStream = await client.textToSpeech.convert(voiceId, {
-      text,
-      modelId: 'eleven_multilingual_v2',
-      outputFormat: 'mp3_44100_128',
+    const mp3Response = await openai.audio.speech.create({
+      model: 'tts-1',
+      voice: voice as 'nova' | 'onyx' | 'shimmer' | 'alloy' | 'echo' | 'fable',
+      input: text,
     });
 
-    // Convert ReadableStream to Buffer
-    const reader = audioStream.getReader();
-    const chunks: Uint8Array[] = [];
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (value) chunks.push(value);
-    }
-    const audioBuffer = Buffer.concat(chunks);
+    const audioBuffer = Buffer.from(await mp3Response.arrayBuffer());
 
     return new NextResponse(audioBuffer, {
       headers: { 'Content-Type': 'audio/mpeg', 'Content-Length': audioBuffer.length.toString() },
