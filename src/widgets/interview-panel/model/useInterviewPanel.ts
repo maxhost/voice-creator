@@ -17,12 +17,22 @@ export const useInterviewPanel = () => {
     stopRecording: machineStopRecording,
     processRecording,
     playAudio,
+    playGreeting,
   } = useVoiceFlow();
 
   const { isRecording: audioIsRecording, start: startAudioRecording, stop: stopAudioRecording } = useAudioRecording();
   const isProcessingRef = useRef(false);
+  const greetingPlayedRef = useRef(false);
 
   const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse;
+
+  // Play greeting when interview starts (only once)
+  useEffect(() => {
+    if (isWaitingForUser && turns.length === 0 && !greetingPlayedRef.current) {
+      greetingPlayedRef.current = true;
+      playGreeting();
+    }
+  }, [isWaitingForUser, turns.length, playGreeting]);
 
   const handleStartRecording = useCallback(async () => {
     if (!canRecord) return;

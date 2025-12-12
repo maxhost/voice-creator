@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { useInterview } from './useInterview';
-import { transcribeAudio, generateAIResponse, textToSpeech } from '../api';
+import { transcribeAudio, generateAIResponse, textToSpeech, fetchGreeting } from '../api';
 
 /**
  * Hook that orchestrates the complete voice flow:
- * Recording → Transcription → AI Response → TTS → Playback
+ * Greeting → Recording → Transcription → AI Response → TTS → Playback
  */
 export const useVoiceFlow = () => {
   const interview = useInterview();
@@ -15,6 +15,20 @@ export const useVoiceFlow = () => {
     onAudioComplete,
     setError,
   } = interview;
+
+  const playGreeting = useCallback(async () => {
+    const result = await fetchGreeting();
+    if (!result.ok) {
+      setError({ code: 'GREETING_FAILED', message: result.error.message, retryable: false });
+      return;
+    }
+
+    const { audioBlob, greeting } = result.data;
+    const audioUrl = URL.createObjectURL(audioBlob);
+
+    // Add greeting to conversation as AI turn
+    onAIResponseReady(greeting, audioUrl);
+  }, [onAIResponseReady, setError]);
 
   const processRecording = useCallback(async (audioBlob: Blob) => {
     // Step 1: Transcribe audio
@@ -71,6 +85,7 @@ export const useVoiceFlow = () => {
 
   return {
     ...interview,
+    playGreeting,
     processRecording,
     playAudio,
   };
