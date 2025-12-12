@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 type RecordButtonProps = {
   isRecording: boolean;
   onStart: () => void;
@@ -13,6 +15,31 @@ export const RecordButton = ({
   onStop,
   disabled = false,
 }: RecordButtonProps) => {
+  // Spacebar support
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && !e.repeat && !disabled) {
+        e.preventDefault();
+        onStart();
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (isRecording) onStop();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [disabled, isRecording, onStart, onStop]);
+
   const handleMouseDown = () => {
     if (disabled) return;
     onStart();
@@ -31,15 +58,16 @@ export const RecordButton = ({
       onTouchStart={handleMouseDown}
       onTouchEnd={handleMouseUp}
       disabled={disabled}
-      className={`w-24 h-24 rounded-full transition-all duration-200
+      className={`w-28 h-28 rounded-full transition-all duration-200
                   ${isRecording
                     ? 'bg-red-500 scale-110 animate-pulse'
                     : 'bg-primary-600 hover:bg-primary-700'}
-                  text-white font-semibold
-                  disabled:opacity-50 disabled:cursor-not-allowed`}
-      aria-label={isRecording ? 'Grabando...' : 'Mantener para grabar'}
+                  text-white font-bold text-lg
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  focus:outline-none focus:ring-4 focus:ring-primary-300`}
+      aria-label={isRecording ? 'Recording...' : 'Hold to record'}
     >
-      {isRecording ? 'REC' : 'HOLD'}
+      {isRecording ? '● REC' : '🎤'}
     </button>
   );
 };

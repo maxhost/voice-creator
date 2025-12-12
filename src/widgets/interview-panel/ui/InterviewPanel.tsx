@@ -67,9 +67,20 @@ export const InterviewPanel = () => {
         />
       </div>
 
-      <p className="text-center text-sm text-gray-500">
-        {canRecord ? 'Hold to speak' : 'Wait for AI to finish'}
-      </p>
+      <div className="text-center space-y-1">
+        {canRecord ? (
+          <>
+            <p className="text-sm font-medium text-gray-700">
+              {isRecording ? 'Release to send' : 'Hold button or spacebar to speak'}
+            </p>
+            <p className="text-xs text-gray-400">
+              Click and hold • Touch and hold • Or press spacebar
+            </p>
+          </>
+        ) : (
+          <p className="text-sm text-gray-500">Wait for AI to finish...</p>
+        )}
+      </div>
     </div>
   );
 };

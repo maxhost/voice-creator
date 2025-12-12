@@ -25,25 +25,32 @@ export const useInterviewPanel = () => {
   const { isRecording: audioIsRecording, start: startAudioRecording, stop: stopAudioRecording } = useAudioRecording();
   const isProcessingRef = useRef(false);
   const greetingPlayedRef = useRef(false);
-  const timerStartedRef = useRef(false);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse;
 
   // Start timer when interview begins
   useEffect(() => {
-    if (!isWaitingForUser || timerStartedRef.current) return;
-    timerStartedRef.current = true;
+    if (!isWaitingForUser) return;
+    if (timerIntervalRef.current) return; // Already running
 
-    const interval = setInterval(() => {
+    timerIntervalRef.current = setInterval(() => {
       onTimerTick();
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    };
   }, [isWaitingForUser, onTimerTick]);
 
   // Check for timer end
   useEffect(() => {
-    if (timeRemaining <= 0) {
+    if (timeRemaining <= 0 && timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
       onTimerEnd();
     }
   }, [timeRemaining, onTimerEnd]);
