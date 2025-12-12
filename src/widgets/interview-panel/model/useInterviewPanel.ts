@@ -18,13 +18,35 @@ export const useInterviewPanel = () => {
     processRecording,
     playAudio,
     playGreeting,
+    onTimerTick,
+    onTimerEnd,
   } = useVoiceFlow();
 
   const { isRecording: audioIsRecording, start: startAudioRecording, stop: stopAudioRecording } = useAudioRecording();
   const isProcessingRef = useRef(false);
   const greetingPlayedRef = useRef(false);
+  const timerStartedRef = useRef(false);
 
   const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse;
+
+  // Start timer when interview begins
+  useEffect(() => {
+    if (!isWaitingForUser || timerStartedRef.current) return;
+    timerStartedRef.current = true;
+
+    const interval = setInterval(() => {
+      onTimerTick();
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isWaitingForUser, onTimerTick]);
+
+  // Check for timer end
+  useEffect(() => {
+    if (timeRemaining <= 0) {
+      onTimerEnd();
+    }
+  }, [timeRemaining, onTimerEnd]);
 
   // Play greeting when interview starts (only once)
   useEffect(() => {

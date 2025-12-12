@@ -36,7 +36,7 @@ export const TranscriptDisplay = ({
           <div className="text-xs text-gray-500 mb-1">
             {turn.speaker === 'user' ? 'Tú' : 'IA'}
           </div>
-          <p className="text-sm">{turn.transcript}</p>
+          <p className="text-sm text-gray-900">{turn.transcript}</p>
         </div>
       ))}
     </div>
