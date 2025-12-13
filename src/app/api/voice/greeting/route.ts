@@ -17,29 +17,17 @@ const VOICE_BY_LANG: Record<string, 'nova' | 'onyx' | 'shimmer'> = {
 };
 
 const GREETING_TEMPLATES: Record<string, (profile: UserProfile) => string> = {
-  es: (p) => `¡Hola ${p.name}! Qué gusto conocerte.
-Vi que quieres crear contenido para ${formatNetworks(p.socialNetworks, 'es')} sobre ${p.expertise}.
-¡Me encanta ese tema! Cuéntame, ¿qué es lo que más te apasiona de esto? ¿Qué te hace único en tu campo?`,
+  es: (p) => `Hola ${p.name}, qué tal. Vi que trabajas en ${p.expertise} y quieres crear contenido para ${formatNetworks(p.socialNetworks, 'es')}. Cuéntame, ¿cómo llegaste a dedicarte a esto?`,
 
-  en: (p) => `Hi ${p.name}! Great to meet you.
-I see you want to create content for ${formatNetworks(p.socialNetworks, 'en')} about ${p.expertise}.
-I love that topic! Tell me, what are you most passionate about? What makes you unique in your field?`,
+  en: (p) => `Hi ${p.name}. I see you work in ${p.expertise} and want to create content for ${formatNetworks(p.socialNetworks, 'en')}. Tell me, how did you get into this field?`,
 
-  fr: (p) => `Bonjour ${p.name}! Ravi de vous rencontrer.
-Je vois que vous voulez créer du contenu pour ${formatNetworks(p.socialNetworks, 'fr')} sur ${p.expertise}.
-J'adore ce sujet! Dites-moi, qu'est-ce qui vous passionne le plus? Qu'est-ce qui vous rend unique dans votre domaine?`,
+  fr: (p) => `Bonjour ${p.name}. Je vois que vous travaillez dans ${p.expertise} et souhaitez créer du contenu pour ${formatNetworks(p.socialNetworks, 'fr')}. Dites-moi, comment êtes-vous arrivé dans ce domaine?`,
 
-  de: (p) => `Hallo ${p.name}! Schön Sie kennenzulernen.
-Ich sehe, Sie möchten Inhalte für ${formatNetworks(p.socialNetworks, 'de')} über ${p.expertise} erstellen.
-Ich liebe dieses Thema! Erzählen Sie mir, was begeistert Sie am meisten? Was macht Sie einzigartig in Ihrem Bereich?`,
+  de: (p) => `Hallo ${p.name}. Ich sehe, Sie arbeiten im Bereich ${p.expertise} und möchten Inhalte für ${formatNetworks(p.socialNetworks, 'de')} erstellen. Erzählen Sie mir, wie sind Sie zu diesem Bereich gekommen?`,
 
-  pt: (p) => `Olá ${p.name}! Prazer em conhecê-lo.
-Vejo que você quer criar conteúdo para ${formatNetworks(p.socialNetworks, 'pt')} sobre ${p.expertise}.
-Adoro esse tema! Me conte, o que mais te apaixona nisso? O que te torna único na sua área?`,
+  pt: (p) => `Olá ${p.name}. Vejo que você trabalha com ${p.expertise} e quer criar conteúdo para ${formatNetworks(p.socialNetworks, 'pt')}. Me conta, como você chegou nessa área?`,
 
-  it: (p) => `Ciao ${p.name}! Piacere di conoscerti.
-Vedo che vuoi creare contenuti per ${formatNetworks(p.socialNetworks, 'it')} su ${p.expertise}.
-Adoro questo argomento! Dimmi, cosa ti appassiona di più? Cosa ti rende unico nel tuo campo?`,
+  it: (p) => `Ciao ${p.name}. Vedo che lavori in ${p.expertise} e vuoi creare contenuti per ${formatNetworks(p.socialNetworks, 'it')}. Dimmi, come sei arrivato in questo campo?`,
 };
 
 const NETWORK_NAMES: Record<string, Record<string, string>> = {

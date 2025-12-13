@@ -30,8 +30,10 @@ export const useInterviewPanel = () => {
   const greetingPlayedRef = useRef(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastPlayedAudioRef = useRef<string | null>(null);
+  const timerEndedRef = useRef(false);
 
-  const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse;
+  // Can only start new recording if time remaining and in waiting state
+  const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse && timeRemaining > 0;
 
   // Start timer when interview begins (runs continuously during entire interview)
   useEffect(() => {
@@ -60,12 +62,28 @@ export const useInterviewPanel = () => {
 
   // Check for timer end
   useEffect(() => {
-    if (timeRemaining <= 0 && timerIntervalRef.current) {
-      clearInterval(timerIntervalRef.current);
-      timerIntervalRef.current = null;
+    if (timeRemaining <= 0 && !timerEndedRef.current) {
+      // Clear the interval
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      timerEndedRef.current = true;
+
+      // If user is currently recording, we'll handle the end after they stop
+      // The recording will be processed and then we'll transition to generating
+      if (!audioIsRecording && !machineIsRecording && !isTranscribing && !isAiResponding && !isPlayingResponse) {
+        onTimerEnd();
+      }
+    }
+  }, [timeRemaining, audioIsRecording, machineIsRecording, isTranscribing, isAiResponding, isPlayingResponse, onTimerEnd]);
+
+  // If timer ended while user was recording/processing, end interview when done
+  useEffect(() => {
+    if (timerEndedRef.current && isWaitingForUser && !audioIsRecording && !machineIsRecording && !isTranscribing && !isAiResponding && !isPlayingResponse) {
       onTimerEnd();
     }
-  }, [timeRemaining, onTimerEnd]);
+  }, [isWaitingForUser, audioIsRecording, machineIsRecording, isTranscribing, isAiResponding, isPlayingResponse, onTimerEnd]);
 
   // Play greeting when interview starts (in greeting state, only once)
   useEffect(() => {
@@ -102,6 +120,8 @@ export const useInterviewPanel = () => {
     }
   }, [isPlayingResponse, currentAudioUrl, playAudio]);
 
+  const isTimeUp = timeRemaining <= 0;
+
   return {
     turns,
     timeRemaining,
@@ -110,6 +130,7 @@ export const useInterviewPanel = () => {
     isTranscribing,
     isAiResponding,
     isPlayingResponse,
+    isTimeUp,
     canRecord,
     handleStartRecording,
     handleStopRecording,
