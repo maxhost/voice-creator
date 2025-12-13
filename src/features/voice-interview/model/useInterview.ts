@@ -30,6 +30,7 @@ export const useInterview = () => {
     lastSpeaker: context.interview.lastSpeaker,
     currentAudioUrl: context.interview.currentAudioUrl,
     isInInterview: state.matches('interview'),
+    isGreeting: state.matches('interview.greeting'),
     isWaitingForUser: state.matches('interview.waitingForUser'),
     isRecording: state.matches('interview.recording'),
     isTranscribing: state.matches('interview.transcribing'),

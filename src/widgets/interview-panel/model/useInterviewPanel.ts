@@ -10,6 +10,7 @@ export const useInterviewPanel = () => {
     timeRemaining,
     currentAudioUrl,
     isInInterview,
+    isGreeting,
     isWaitingForUser,
     isRecording: machineIsRecording,
     isTranscribing,
@@ -65,13 +66,13 @@ export const useInterviewPanel = () => {
     }
   }, [timeRemaining, onTimerEnd]);
 
-  // Play greeting when interview starts (only once, and only when userProfile is available)
+  // Play greeting when interview starts (in greeting state, only once)
   useEffect(() => {
-    if (isWaitingForUser && turns.length === 0 && !greetingPlayedRef.current && userProfile) {
+    if (isGreeting && !greetingPlayedRef.current && userProfile) {
       greetingPlayedRef.current = true;
       playGreeting();
     }
-  }, [isWaitingForUser, turns.length, playGreeting, userProfile]);
+  }, [isGreeting, playGreeting, userProfile]);
 
   const handleStartRecording = useCallback(async () => {
     if (!canRecord) return;
@@ -99,6 +100,7 @@ export const useInterviewPanel = () => {
   return {
     turns,
     timeRemaining,
+    isGreeting,
     isRecording: audioIsRecording || machineIsRecording,
     isTranscribing,
     isAiResponding,

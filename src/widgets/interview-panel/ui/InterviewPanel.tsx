@@ -16,6 +16,7 @@ export const InterviewPanel = () => {
   const {
     turns,
     timeRemaining,
+    isGreeting,
     isRecording,
     isTranscribing,
     isAiResponding,
@@ -25,11 +26,12 @@ export const InterviewPanel = () => {
     handleStopRecording,
   } = useInterviewPanel();
 
-  const showThinking = isTranscribing || isAiResponding;
+  const showThinking = isGreeting || isTranscribing || isAiResponding;
   const browserLang = typeof navigator !== 'undefined' ? navigator.language.split('-')[0] : 'en';
   const languageHint = LANGUAGE_HINT[browserLang] || LANGUAGE_HINT.en;
 
   const getStatusMessage = () => {
+    if (isGreeting) return 'Preparing greeting...';
     if (isTranscribing) return 'Transcribing...';
     if (isAiResponding) return 'Generating response...';
     return '';

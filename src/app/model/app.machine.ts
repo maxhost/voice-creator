@@ -65,8 +65,39 @@ export const appMachine = createMachine({
     },
 
     interview: {
-      initial: 'waitingForUser',
+      initial: 'greeting',
       states: {
+        greeting: {
+          on: {
+            AI_RESPONSE_READY: {
+              target: 'playingResponse',
+              actions: assign({
+                interview: ({ context, event }) => ({
+                  ...context.interview,
+                  lastSpeaker: 'ai' as const,
+                  currentAudioUrl: event.audioUrl,
+                  turns: [
+                    ...context.interview.turns,
+                    {
+                      id: `turn-${Date.now()}`,
+                      speaker: 'ai' as const,
+                      transcript: event.response,
+                      timestamp: Date.now(),
+                      extractedTopics: [],
+                    },
+                  ],
+                }),
+              }),
+            },
+            SET_ERROR: {
+              target: 'waitingForUser',
+              actions: assign({
+                error: ({ event }) => event.error,
+              }),
+            },
+            TIMER_END: 'closing',
+          },
+        },
         waitingForUser: {
           on: {
             START_RECORDING: 'recording',
