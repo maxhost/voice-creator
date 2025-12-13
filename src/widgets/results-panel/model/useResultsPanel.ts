@@ -2,12 +2,14 @@
 
 import { useState, useCallback } from 'react';
 import { usePostGeneration } from '@/features/post-generation';
+import { usePayment } from '@/features/payment';
 import { generatePdf } from '@/features/pdf-export';
 import { formatTimeHuman } from '@/shared/lib';
 import { INTERVIEW_DURATION_SECONDS } from '@/shared/config/constants';
 
 export const useResultsPanel = () => {
   const { posts } = usePostGeneration();
+  const { initiateCheckout, isLoading: isRedirecting } = usePayment();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = useCallback(async () => {
@@ -35,9 +37,15 @@ export const useResultsPanel = () => {
     }
   }, [posts]);
 
+  const handleNewInterview = useCallback(() => {
+    initiateCheckout();
+  }, [initiateCheckout]);
+
   return {
     posts,
     isDownloading,
+    isRedirecting,
     handleDownload,
+    handleNewInterview,
   };
 };
