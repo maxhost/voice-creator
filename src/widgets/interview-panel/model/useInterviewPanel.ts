@@ -5,6 +5,7 @@ import { useVoiceFlow, useAudioRecording } from '@/features/voice-interview';
 
 export const useInterviewPanel = () => {
   const {
+    userProfile,
     turns,
     timeRemaining,
     currentAudioUrl,
@@ -64,13 +65,13 @@ export const useInterviewPanel = () => {
     }
   }, [timeRemaining, onTimerEnd]);
 
-  // Play greeting when interview starts (only once)
+  // Play greeting when interview starts (only once, and only when userProfile is available)
   useEffect(() => {
-    if (isWaitingForUser && turns.length === 0 && !greetingPlayedRef.current) {
+    if (isWaitingForUser && turns.length === 0 && !greetingPlayedRef.current && userProfile) {
       greetingPlayedRef.current = true;
       playGreeting();
     }
-  }, [isWaitingForUser, turns.length, playGreeting]);
+  }, [isWaitingForUser, turns.length, playGreeting, userProfile]);
 
   const handleStartRecording = useCallback(async () => {
     if (!canRecord) return;

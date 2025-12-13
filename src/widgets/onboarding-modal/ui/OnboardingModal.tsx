@@ -21,7 +21,6 @@ type Translations = {
   networksHint: string;
   expertiseLabel: string;
   expertisePlaceholder: string;
-  minChars: string;
   submit: string;
 };
 
@@ -35,7 +34,6 @@ const TRANSLATIONS: Record<string, Translations> = {
     networksHint: 'Selecciona al menos una red social',
     expertiseLabel: '¿Sobre qué tema te gustaría crear contenido?',
     expertisePlaceholder: 'Ej: Soy diseñador gráfico especializado en branding para startups. Me encanta enseñar sobre identidad visual y tipografía.',
-    minChars: 'caracteres mínimo',
     submit: 'Comenzar entrevista',
   },
   en: {
@@ -47,7 +45,6 @@ const TRANSLATIONS: Record<string, Translations> = {
     networksHint: 'Select at least one social network',
     expertiseLabel: 'What topic would you like to create content about?',
     expertisePlaceholder: 'E.g.: I\'m a graphic designer specialized in branding for startups. I love teaching about visual identity and typography.',
-    minChars: 'minimum characters',
     submit: 'Start interview',
   },
   fr: {
@@ -59,7 +56,6 @@ const TRANSLATIONS: Record<string, Translations> = {
     networksHint: 'Sélectionnez au moins un réseau social',
     expertiseLabel: 'Sur quel sujet aimeriez-vous créer du contenu?',
     expertisePlaceholder: 'Ex: Je suis graphiste spécialisé en branding pour startups. J\'adore enseigner l\'identité visuelle et la typographie.',
-    minChars: 'caractères minimum',
     submit: 'Commencer l\'entretien',
   },
   de: {
@@ -71,7 +67,6 @@ const TRANSLATIONS: Record<string, Translations> = {
     networksHint: 'Wählen Sie mindestens ein soziales Netzwerk',
     expertiseLabel: 'Über welches Thema möchten Sie Inhalte erstellen?',
     expertisePlaceholder: 'Z.B.: Ich bin Grafikdesigner spezialisiert auf Branding für Startups. Ich unterrichte gerne über visuelle Identität und Typografie.',
-    minChars: 'Mindestzeichen',
     submit: 'Interview starten',
   },
   pt: {
@@ -83,7 +78,6 @@ const TRANSLATIONS: Record<string, Translations> = {
     networksHint: 'Selecione pelo menos uma rede social',
     expertiseLabel: 'Sobre qual tema você gostaria de criar conteúdo?',
     expertisePlaceholder: 'Ex: Sou designer gráfico especializado em branding para startups. Adoro ensinar sobre identidade visual e tipografia.',
-    minChars: 'caracteres mínimos',
     submit: 'Iniciar entrevista',
   },
   it: {
@@ -95,7 +89,6 @@ const TRANSLATIONS: Record<string, Translations> = {
     networksHint: 'Seleziona almeno un social network',
     expertiseLabel: 'Su quale argomento vorresti creare contenuti?',
     expertisePlaceholder: 'Es: Sono un grafico specializzato in branding per startup. Mi piace insegnare identità visiva e tipografia.',
-    minChars: 'caratteri minimi',
     submit: 'Inizia intervista',
   },
 };
@@ -126,7 +119,7 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
     );
   };
 
-  const isValid = name.trim().length > 0 && selectedNetworks.length > 0 && expertise.trim().length > 10;
+  const isValid = name.trim().length > 0 && selectedNetworks.length > 0 && expertise.trim().length >= 10;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,13 +193,14 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
               <textarea
                 id="expertise"
                 value={expertise}
-                onChange={(e) => setExpertise(e.target.value)}
+                onChange={(e) => setExpertise(e.target.value.slice(0, 400))}
                 placeholder={t.expertisePlaceholder}
                 rows={3}
+                maxLength={400}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none text-gray-900"
               />
               <p className="text-sm text-gray-500 mt-1">
-                {expertise.length}/10 {t.minChars}
+                {expertise.length}/400
               </p>
             </div>
 
