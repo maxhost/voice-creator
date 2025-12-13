@@ -4,7 +4,7 @@
  */
 
 // Interview settings
-export const INTERVIEW_DURATION_SECONDS = 180; // 3 minutes
+export const INTERVIEW_DURATION_SECONDS = 600; // 10 minutes
 export const FINAL_RESPONSE_TIMEOUT_MS = 30000; // 30 seconds
 export const MIN_POSTS_TO_GENERATE = 4;
 export const MAX_POSTS_TO_GENERATE = 7;
