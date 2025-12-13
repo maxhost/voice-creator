@@ -5,13 +5,29 @@ import type { GeneratePostsInput, GenerationError } from '../model/types';
 export const generatePosts = async (
   input: GeneratePostsInput
 ): Promise<Result<Post[], GenerationError>> => {
-  // TODO: Implement actual generation via OpenAI
-  // This is a placeholder implementation
-
   try {
-    const posts: Post[] = [];
+    const response = await fetch('/api/ideas/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        turns: input.turns,
+        userProfile: input.userProfile,
+      }),
+    });
 
-    return { ok: true, data: posts };
+    if (!response.ok) {
+      const error = await response.json();
+      return {
+        ok: false,
+        error: {
+          code: 'GENERATION_FAILED',
+          message: error.error || 'Failed to generate ideas',
+        },
+      };
+    }
+
+    const data = await response.json();
+    return { ok: true, data: data.posts };
   } catch (error) {
     return {
       ok: false,

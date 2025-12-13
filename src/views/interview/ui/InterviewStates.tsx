@@ -61,3 +61,20 @@ export const UsedState = ({ onBuyNew }: UsedStateProps) => (
     </button>
   </StateLayout>
 );
+
+export const GeneratingState = () => (
+  <StateLayout>
+    <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto">
+      <div className="w-8 h-8 border-3 border-primary-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+    <h1 className="text-2xl font-bold text-gray-900">Generando tus ideas</h1>
+    <p className="text-gray-600">
+      Estamos analizando tu entrevista y creando ideas de contenido personalizadas...
+    </p>
+    <div className="flex justify-center gap-1 pt-4">
+      <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+      <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+      <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+    </div>
+  </StateLayout>
+);

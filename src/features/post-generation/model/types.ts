@@ -30,9 +30,9 @@ export type GeneratePostsInput = {
     speaker: 'user' | 'ai';
     transcript: string;
   }>;
-  topics: string[];
-  insights: Array<{
-    type: string;
-    content: string;
-  }>;
+  userProfile: {
+    name: string;
+    socialNetworks: string[];
+    expertise: string;
+  };
 };

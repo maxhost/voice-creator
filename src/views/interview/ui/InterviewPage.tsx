@@ -6,10 +6,11 @@ import { usePayment } from '@/features/payment';
 import { useAppMachine } from '@/app/providers';
 import { InterviewPanel } from '@/widgets/interview-panel';
 import { OnboardingModal } from '@/widgets/onboarding-modal';
-import { LoadingState, ErrorState, UsedState } from './InterviewStates';
+import { LoadingState, ErrorState, UsedState, GeneratingState } from './InterviewStates';
+import { generatePosts } from '@/features/post-generation';
 import type { UserProfile } from '@/app/model/types';
 
-type PageState = 'loading' | 'verifying' | 'onboarding' | 'ready' | 'error' | 'used';
+type PageState = 'loading' | 'verifying' | 'onboarding' | 'ready' | 'generating' | 'error' | 'used';
 
 const MAX_RETRIES = 10;
 const RETRY_DELAY = 1500;
@@ -25,6 +26,8 @@ export const InterviewPage = () => {
 
   const isOnboarding = state.matches('onboarding');
   const isInInterview = state.matches('interview');
+  const isGenerating = state.matches('generating');
+  const generationStartedRef = useRef(false);
 
   useEffect(() => {
     const id = searchParams.get('session_id');
@@ -56,23 +59,59 @@ export const InterviewPage = () => {
       setPageState('onboarding');
     } else if (isInInterview) {
       setPageState('ready');
+    } else if (isGenerating) {
+      setPageState('generating');
     }
-  }, [isOnboarding, isInInterview]);
+  }, [isOnboarding, isInInterview, isGenerating]);
+
+  // Trigger generation when entering generating state
+  useEffect(() => {
+    if (!isGenerating || generationStartedRef.current) return;
+    if (!context.userProfile) return;
+
+    generationStartedRef.current = true;
+
+    const runGeneration = async () => {
+      const turns = context.interview.turns.map((t) => ({
+        speaker: t.speaker,
+        transcript: t.transcript,
+      }));
+
+      const result = await generatePosts({
+        turns,
+        userProfile: {
+          name: context.userProfile!.name,
+          socialNetworks: context.userProfile!.socialNetworks,
+          expertise: context.userProfile!.expertise,
+        },
+      });
+
+      if (result.ok) {
+        send({ type: 'GENERATION_COMPLETE', posts: result.data });
+      } else {
+        send({ type: 'GENERATION_FAILED', error: result.error.message });
+      }
+    };
+
+    runGeneration();
+  }, [isGenerating, context.interview.turns, context.userProfile, send]);
+
+  // Navigate to results when generation is complete
+  useEffect(() => {
+    if (state.matches('results') && sessionId) {
+      completeSession(sessionId, context.generation.posts.length);
+      router.push('/results');
+    }
+  }, [state, sessionId, completeSession, router, context.generation.posts.length]);
 
   const handleOnboardingComplete = useCallback((profile: UserProfile) => {
     send({ type: 'COMPLETE_ONBOARDING', userProfile: profile });
   }, [send]);
 
-  const handleComplete = useCallback((ideasGenerated: number = 0) => {
-    if (sessionId) {
-      completeSession(sessionId, ideasGenerated);
-      router.push(`/results?session_id=${sessionId}`);
-    }
-  }, [sessionId, completeSession, router]);
-
   const goHome = useCallback(() => router.push('/'), [router]);
 
   if (pageState === 'loading' || pageState === 'verifying') return <LoadingState />;
+  if (pageState === 'generating') return <GeneratingState />;
   if (pageState === 'used') return <UsedState onBuyNew={goHome} />;
   if (pageState === 'error') return <ErrorState error={error} onBack={goHome} />;
 
@@ -95,13 +134,6 @@ export const InterviewPage = () => {
         </div>
 
         <InterviewPanel />
-
-        <button
-          onClick={() => handleComplete(5)}
-          className="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 text-sm"
-        >
-          [DEV] Completar entrevista (5 ideas)
-        </button>
       </div>
     </main>
   );

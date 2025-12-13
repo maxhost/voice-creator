@@ -25,7 +25,7 @@ export const useResultsPanel = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `voice-creator-ideas-${Date.now()}.txt`; // Will be .pdf when implemented
+      a.download = `voice-creator-ideas-${Date.now()}.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
