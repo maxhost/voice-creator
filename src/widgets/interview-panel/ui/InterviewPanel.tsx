@@ -63,6 +63,7 @@ export const InterviewPanel = () => {
       <div className="flex justify-center">
         <RecordButton
           isRecording={isRecording}
+          isProcessing={isTranscribing || isAiResponding || isGreeting || isPlayingResponse}
           onStart={handleStartRecording}
           onStop={handleStopRecording}
           disabled={!canRecord}
