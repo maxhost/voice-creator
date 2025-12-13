@@ -29,6 +29,7 @@ export const useInterviewPanel = () => {
   const isProcessingRef = useRef(false);
   const greetingPlayedRef = useRef(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastPlayedAudioRef = useRef<string | null>(null);
 
   const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse;
 
@@ -90,9 +91,10 @@ export const useInterviewPanel = () => {
     }
   }, [stopAudioRecording, machineStopRecording, processRecording]);
 
-  // Auto-play AI response when ready
+  // Auto-play AI response when ready (only once per URL)
   useEffect(() => {
-    if (isPlayingResponse && currentAudioUrl) {
+    if (isPlayingResponse && currentAudioUrl && currentAudioUrl !== lastPlayedAudioRef.current) {
+      lastPlayedAudioRef.current = currentAudioUrl;
       playAudio(currentAudioUrl);
     }
   }, [isPlayingResponse, currentAudioUrl, playAudio]);
