@@ -85,9 +85,12 @@ export const useInterviewPanel = () => {
     const blob = await stopAudioRecording();
     if (blob && !isProcessingRef.current) {
       isProcessingRef.current = true;
-      machineStopRecording(blob);
-      await processRecording(blob);
-      isProcessingRef.current = false;
+      try {
+        machineStopRecording(blob);
+        await processRecording(blob);
+      } finally {
+        isProcessingRef.current = false;
+      }
     }
   }, [stopAudioRecording, machineStopRecording, processRecording]);
 

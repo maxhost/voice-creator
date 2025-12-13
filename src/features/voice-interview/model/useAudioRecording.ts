@@ -8,6 +8,7 @@ export const useAudioRecording = () => {
   const [error, setError] = useState<string | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
+  const isRecordingRef = useRef(false);
 
   const start = useCallback(async () => {
     try {
@@ -25,6 +26,7 @@ export const useAudioRecording = () => {
 
       mediaRecorder.current.start(1000); // Chunk every 1s
       setState('recording');
+      isRecordingRef.current = true;
     } catch (err) {
       setError('No se pudo acceder al micrófono');
       setState('idle');
@@ -33,11 +35,12 @@ export const useAudioRecording = () => {
 
   const stop = useCallback(async (): Promise<Blob | null> => {
     return new Promise((resolve) => {
-      if (!mediaRecorder.current || state !== 'recording') {
+      if (!mediaRecorder.current || !isRecordingRef.current) {
         resolve(null);
         return;
       }
 
+      isRecordingRef.current = false;
       setState('processing');
 
       mediaRecorder.current.onstop = () => {
@@ -53,7 +56,7 @@ export const useAudioRecording = () => {
 
       mediaRecorder.current.stop();
     });
-  }, [state]);
+  }, []);
 
   return {
     state,
