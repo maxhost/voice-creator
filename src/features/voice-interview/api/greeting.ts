@@ -8,15 +8,10 @@ export const fetchGreeting = async (
   userProfile: UserProfile
 ): Promise<Result<GreetingResult, GreetingError>> => {
   try {
-    const browserLang = typeof navigator !== 'undefined' ? navigator.language : 'en';
-
     const response = await fetch('/api/voice/greeting', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userProfile,
-        language: browserLang,
-      }),
+      body: JSON.stringify({ userProfile }),
     });
 
     if (!response.ok) {

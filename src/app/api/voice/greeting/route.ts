@@ -67,20 +67,43 @@ function getLanguageFromCode(code: string): string {
   return GREETING_TEMPLATES[lang] ? lang : 'en';
 }
 
+async function detectLanguage(text: string, openai: ReturnType<typeof getOpenAI>): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: 'Detect the language of the text. Respond with ONLY the ISO 639-1 code (es, en, fr, de, pt, it). If unsure, respond with "en".',
+        },
+        { role: 'user', content: text },
+      ],
+      max_tokens: 5,
+      temperature: 0,
+    });
+    const detected = response.choices[0]?.message?.content?.trim().toLowerCase() || 'en';
+    return GREETING_TEMPLATES[detected] ? detected : 'en';
+  } catch {
+    return 'en';
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userProfile, language } = body as { userProfile: UserProfile; language: string };
+    const { userProfile } = body as { userProfile: UserProfile };
 
     if (!userProfile?.name || !userProfile?.socialNetworks?.length || !userProfile?.expertise) {
       return NextResponse.json({ error: 'Invalid user profile' }, { status: 400 });
     }
 
-    const lang = getLanguageFromCode(language || 'en');
+    const openai = getOpenAI();
+
+    // Detect language from the expertise text
+    const lang = await detectLanguage(userProfile.expertise, openai);
     const greetingText = GREETING_TEMPLATES[lang](userProfile);
     const voice = VOICE_BY_LANG[lang] || 'nova';
 
-    const openai = getOpenAI();
     const mp3Response = await openai.audio.speech.create({
       model: 'tts-1',
       voice,
