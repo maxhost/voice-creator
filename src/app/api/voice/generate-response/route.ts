@@ -4,25 +4,40 @@ import { getOpenAI } from '@/shared/api/openai';
 const json = NextResponse.json;
 
 type Turn = { role: 'user' | 'ai'; content: string };
+type UserProfile = {
+  name: string;
+  socialNetworks: string[];
+  expertise: string;
+};
 
-const SYSTEM_PROMPT = `Eres un entrevistador experto en estrategia de contenido y redes sociales. Tu misión es guiar una conversación para extraer ideas ÚNICAS y ORIGINALES para posts virales.
+const buildSystemPrompt = (userProfile?: UserProfile): string => {
+  const networksList = userProfile?.socialNetworks?.join(', ') || 'redes sociales';
+  const userContext = userProfile
+    ? `
+## CONTEXTO DEL USUARIO
+- Nombre: ${userProfile.name}
+- Redes objetivo: ${networksList}
+- Área de expertise: ${userProfile.expertise}
 
+Ya conoces esta información, NO la vuelvas a preguntar. Profundiza directamente en su expertise.`
+    : '';
+
+  return `Eres un entrevistador experto en estrategia de contenido y redes sociales. Tu misión es guiar una conversación para extraer ideas ÚNICAS y ORIGINALES para posts virales.
+${userContext}
 ## TU OBJETIVO
 Obtener entre 4 y 7 ideas de contenido únicas, alineadas con las mejores prácticas de RRSS 2025:
 - Hooks que capturen atención en los primeros 3 segundos
 - Contenido que genere engagement (comentarios, guardados, compartidos)
 - Formatos que funcionan: storytelling, listas, controversia educada, behind-the-scenes, transformaciones
 
-## FLUJO DE LA ENTREVISTA
-1. PRIMERA PREGUNTA: Pregunta para qué redes sociales quiere crear contenido (Instagram, TikTok, LinkedIn, X/Twitter, YouTube, etc.)
-2. SEGUNDA PREGUNTA: Pregunta sobre su área de expertise o negocio
-3. SIGUIENTES PREGUNTAS: Indaga en:
-   - Experiencias únicas o anécdotas que haya vivido
-   - Errores que cometió y aprendizajes
-   - Opiniones contrarias al mainstream de su industria
-   - Resultados o transformaciones que ha logrado
-   - Secretos o trucos que pocos conocen
-   - Predicciones o tendencias que ve venir
+## ESTRATEGIA DE PREGUNTAS
+Indaga en:
+- Experiencias únicas o anécdotas que haya vivido
+- Errores que cometió y aprendizajes
+- Opiniones contrarias al mainstream de su industria
+- Resultados o transformaciones que ha logrado
+- Secretos o trucos que pocos conocen
+- Predicciones o tendencias que ve venir
 
 ## REGLAS
 - Responde en el MISMO IDIOMA que usa el usuario
@@ -31,18 +46,20 @@ Obtener entre 4 y 7 ideas de contenido únicas, alineadas con las mejores práct
 - Haz UNA pregunta a la vez
 - Profundiza cuando detectes algo con potencial viral
 - Guía hacia ideas concretas, no conceptos abstractos
-- Recuerda las redes que mencionó para adaptar las ideas
+- Adapta las ideas a las redes mencionadas (${networksList})
 
 ## FORMATO DE RESPUESTA
 Al final de CADA respuesta, añade:
 TEMAS: tema1, tema2 (1-3 temas clave extraídos)
 IDIOMA: código ISO (es, en, fr, de, pt, it)`;
+};
 
 export async function POST(request: NextRequest) {
   try {
-    const { transcript, conversationHistory } = await request.json() as {
+    const { transcript, conversationHistory, userProfile } = await request.json() as {
       transcript: string;
       conversationHistory: Turn[];
+      userProfile?: UserProfile;
     };
 
     if (!transcript) {
@@ -50,8 +67,9 @@ export async function POST(request: NextRequest) {
     }
 
     const openai = getOpenAI();
+    const systemPrompt = buildSystemPrompt(userProfile);
     const messages = [
-      { role: 'system' as const, content: SYSTEM_PROMPT },
+      { role: 'system' as const, content: systemPrompt },
       ...conversationHistory.map((turn) => ({
         role: turn.role === 'user' ? 'user' as const : 'assistant' as const,
         content: turn.content,

@@ -1,7 +1,12 @@
 import type { Result } from '@/shared/lib';
+import type { UserProfile } from '@/app/model/types';
 
 type Turn = { role: 'user' | 'ai'; content: string };
-type GenerateParams = { transcript: string; conversationHistory: Turn[] };
+type GenerateParams = {
+  transcript: string;
+  conversationHistory: Turn[];
+  userProfile?: UserProfile;
+};
 type GenerateResult = { response: string; topics: string[]; language: string };
 type GenerateError = { code: 'AI_RESPONSE_FAILED'; message: string };
 

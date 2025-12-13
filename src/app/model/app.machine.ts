@@ -4,6 +4,7 @@ import { INTERVIEW_DURATION_SECONDS } from '@/shared/config/constants';
 
 const initialContext: AppContext = {
   sessionId: null,
+  userProfile: null,
   payment: {
     status: 'idle',
     intentId: null,
@@ -40,13 +41,24 @@ export const appMachine = createMachine({
         // Payment is now handled via Stripe redirect
         // User clicks CTA → redirects to Stripe → returns to /interview?session_id=xxx
         START_INTERVIEW: {
-          target: 'interview',
+          target: 'onboarding',
           actions: assign({
             sessionId: ({ event }) => event.sessionId,
             payment: ({ context }) => ({
               ...context.payment,
               status: 'confirmed' as const,
             }),
+          }),
+        },
+      },
+    },
+
+    onboarding: {
+      on: {
+        COMPLETE_ONBOARDING: {
+          target: 'interview',
+          actions: assign({
+            userProfile: ({ event }) => event.userProfile,
           }),
         },
       },

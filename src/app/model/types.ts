@@ -1,6 +1,14 @@
 import type { Turn, Topic, Insight } from '@/entities/interview-session';
 import type { Post } from '@/entities/post';
 
+export type SocialNetwork = 'instagram' | 'tiktok' | 'linkedin' | 'twitter' | 'youtube' | 'facebook';
+
+export type UserProfile = {
+  name: string;
+  socialNetworks: SocialNetwork[];
+  expertise: string;
+};
+
 /**
  * Main application state machine context.
  * Single source of truth for the entire app state.
@@ -8,6 +16,9 @@ import type { Post } from '@/entities/post';
 export type AppContext = {
   // Session
   sessionId: string | null;
+
+  // User profile (from onboarding)
+  userProfile: UserProfile | null;
 
   // Payment
   payment: {
@@ -49,6 +60,9 @@ export type AppEvents =
   | { type: 'PAYMENT_SUCCESS'; intentId: string; sessionId: string }
   | { type: 'PAYMENT_FAILED'; error: string }
   | { type: 'PAYMENT_CANCELLED' }
+
+  // Onboarding events
+  | { type: 'COMPLETE_ONBOARDING'; userProfile: UserProfile }
 
   // Interview events
   | { type: 'START_INTERVIEW'; sessionId: string }

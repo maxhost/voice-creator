@@ -9,6 +9,7 @@ import { transcribeAudio, generateAIResponse, textToSpeech, fetchGreeting } from
 export const useVoiceFlow = () => {
   const interview = useInterview();
   const {
+    userProfile,
     turns,
     onTranscriptionComplete,
     onAIResponseReady,
@@ -17,7 +18,12 @@ export const useVoiceFlow = () => {
   } = interview;
 
   const playGreeting = useCallback(async () => {
-    const result = await fetchGreeting();
+    if (!userProfile) {
+      setError({ code: 'GREETING_FAILED', message: 'User profile not found', retryable: false });
+      return;
+    }
+
+    const result = await fetchGreeting(userProfile);
     if (!result.ok) {
       setError({ code: 'GREETING_FAILED', message: result.error.message, retryable: false });
       return;
@@ -28,7 +34,7 @@ export const useVoiceFlow = () => {
 
     // Add greeting to conversation as AI turn
     onAIResponseReady(greeting, audioUrl);
-  }, [onAIResponseReady, setError]);
+  }, [userProfile, onAIResponseReady, setError]);
 
   const processRecording = useCallback(async (audioBlob: Blob) => {
     // Step 1: Transcribe audio
@@ -45,7 +51,11 @@ export const useVoiceFlow = () => {
       role: t.speaker === 'user' ? 'user' as const : 'ai' as const,
       content: t.transcript,
     }));
-    const aiResult = await generateAIResponse({ transcript, conversationHistory });
+    const aiResult = await generateAIResponse({
+      transcript,
+      conversationHistory,
+      userProfile: userProfile || undefined,
+    });
     if (!aiResult.ok) {
       setError({ code: 'AI_RESPONSE_FAILED', message: aiResult.error.message, retryable: true });
       return;
@@ -66,7 +76,7 @@ export const useVoiceFlow = () => {
     // Create audio URL and notify state machine
     const audioUrl = URL.createObjectURL(ttsResult.data);
     onAIResponseReady(response, audioUrl);
-  }, [turns, onTranscriptionComplete, onAIResponseReady, setError]);
+  }, [turns, userProfile, onTranscriptionComplete, onAIResponseReady, setError]);
 
   const playAudio = useCallback((audioUrl: string) => {
     const audio = new Audio(audioUrl);

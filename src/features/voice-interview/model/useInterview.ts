@@ -23,6 +23,7 @@ export const useInterview = () => {
   };
 
   return {
+    userProfile: context.userProfile,
     turns: context.interview.turns,
     topics: context.interview.topics,
     timeRemaining: context.interview.timeRemaining,
