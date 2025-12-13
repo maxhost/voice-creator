@@ -8,6 +8,7 @@ export const useInterviewPanel = () => {
     turns,
     timeRemaining,
     currentAudioUrl,
+    isInInterview,
     isWaitingForUser,
     isRecording: machineIsRecording,
     isTranscribing,
@@ -29,9 +30,17 @@ export const useInterviewPanel = () => {
 
   const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse;
 
-  // Start timer when interview begins
+  // Start timer when interview begins (runs continuously during entire interview)
   useEffect(() => {
-    if (!isWaitingForUser) return;
+    if (!isInInterview) {
+      // Clear timer if we leave interview state
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      return;
+    }
+
     if (timerIntervalRef.current) return; // Already running
 
     timerIntervalRef.current = setInterval(() => {
@@ -44,7 +53,7 @@ export const useInterviewPanel = () => {
         timerIntervalRef.current = null;
       }
     };
-  }, [isWaitingForUser, onTimerTick]);
+  }, [isInInterview, onTimerTick]);
 
   // Check for timer end
   useEffect(() => {
