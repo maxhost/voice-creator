@@ -2,6 +2,7 @@
 
 import { RecordButton, TranscriptDisplay, TimerDisplay, ThinkingIndicator } from '@/features/voice-interview';
 import { useInterviewPanel } from '../model/useInterviewPanel';
+import { TIMER_WARNING_THRESHOLD_SECONDS } from '@/shared/config/constants';
 
 const LANGUAGE_HINT: Record<string, string> = {
   es: 'Puedes hablar en cualquier idioma y la IA responderá en ese idioma',
@@ -19,6 +20,15 @@ const TIME_UP_MESSAGE: Record<string, string> = {
   de: 'Die Zeit ist abgelaufen. Bitte warten Sie, während wir Ihre Ideen generieren...',
   pt: 'O tempo acabou. Aguarde enquanto geramos suas ideias...',
   it: 'Il tempo è scaduto. Attendi mentre generiamo le tue idee...',
+};
+
+const LAST_RESPONSE_WARNING: Record<string, string> = {
+  es: '⚠️ Última oportunidad para hablar. La IA dará su respuesta final.',
+  en: '⚠️ Last chance to speak. The AI will give its final response.',
+  fr: "⚠️ Dernière chance de parler. L'IA donnera sa réponse finale.",
+  de: '⚠️ Letzte Gelegenheit zu sprechen. Die KI gibt ihre letzte Antwort.',
+  pt: '⚠️ Última chance de falar. A IA dará sua resposta final.',
+  it: "⚠️ Ultima possibilità di parlare. L'IA darà la sua risposta finale.",
 };
 
 // Status banner component
@@ -73,6 +83,8 @@ export const InterviewPanel = () => {
     isPlayingResponse,
     isTimeUp,
     canRecord,
+    micPermission,
+    micError,
     handleStartRecording,
     handleStopRecording,
   } = useInterviewPanel();
@@ -80,6 +92,8 @@ export const InterviewPanel = () => {
   const browserLang = typeof navigator !== 'undefined' ? navigator.language.split('-')[0] : 'en';
   const languageHint = LANGUAGE_HINT[browserLang] || LANGUAGE_HINT.en;
   const timeUpMessage = TIME_UP_MESSAGE[browserLang] || TIME_UP_MESSAGE.en;
+  const lastResponseWarning = LAST_RESPONSE_WARNING[browserLang] || LAST_RESPONSE_WARNING.en;
+  const isInWarningZone = timeRemaining > 0 && timeRemaining <= TIMER_WARNING_THRESHOLD_SECONDS;
 
   // Determine current status
   const getStatus = (): 'your-turn' | 'recording' | 'ai-speaking' | 'processing' | 'time-up' => {
@@ -183,7 +197,14 @@ export const InterviewPanel = () => {
         )}
       </div>
 
-      {turns.length === 0 && !isTimeUp && status === 'your-turn' && (
+      {/* Warning banner when time is running out */}
+      {isInWarningZone && (
+        <div className="bg-red-50 border-2 border-red-400 rounded-lg p-3 text-center animate-pulse">
+          <p className="text-sm font-semibold text-red-700">{lastResponseWarning}</p>
+        </div>
+      )}
+
+      {turns.length === 0 && !isTimeUp && status === 'your-turn' && !isInWarningZone && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
           <p className="text-sm text-blue-700">{languageHint}</p>
         </div>
@@ -193,10 +214,17 @@ export const InterviewPanel = () => {
         <TranscriptDisplay turns={turns} />
       </div>
 
+      {/* Microphone error message */}
+      {micError && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+          <p className="text-sm text-red-700">{micError}</p>
+        </div>
+      )}
+
       {/* Record Button with visual indicator */}
       <div className="flex justify-center">
-        <div className={`relative ${status === 'your-turn' ? 'animate-pulse' : ''}`}>
-          {status === 'your-turn' && (
+        <div className={`relative ${status === 'your-turn' && micPermission !== 'denied' ? 'animate-pulse' : ''}`}>
+          {status === 'your-turn' && micPermission !== 'denied' && (
             <div className="absolute inset-0 -m-2 rounded-full border-4 border-green-400 animate-ping opacity-75" />
           )}
           <RecordButton
@@ -204,7 +232,7 @@ export const InterviewPanel = () => {
             isProcessing={isTranscribing || isAiResponding || isGreeting || isPlayingResponse}
             onStart={handleStartRecording}
             onStop={handleStopRecording}
-            disabled={!canRecord}
+            disabled={!canRecord || micPermission === 'denied'}
           />
         </div>
       </div>

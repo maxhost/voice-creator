@@ -3,12 +3,42 @@
 import { useState, useCallback, useRef } from 'react';
 import type { RecordingState } from './types';
 
+export type MicPermissionStatus = 'unknown' | 'granted' | 'denied' | 'prompt';
+
 export const useAudioRecording = () => {
   const [state, setState] = useState<RecordingState>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [micPermission, setMicPermission] = useState<MicPermissionStatus>('unknown');
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const isRecordingRef = useRef(false);
+
+  // Request microphone permission explicitly
+  const requestMicPermission = useCallback(async (): Promise<boolean> => {
+    try {
+      // First check current permission state if available
+      if (navigator.permissions) {
+        const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+        if (permissionStatus.state === 'denied') {
+          setMicPermission('denied');
+          setError('Permiso de micrófono denegado. Por favor habilítalo en la configuración del navegador.');
+          return false;
+        }
+      }
+
+      // Request actual permission by getting the stream
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Immediately stop the stream - we just wanted to request permission
+      stream.getTracks().forEach((track) => track.stop());
+      setMicPermission('granted');
+      setError(null);
+      return true;
+    } catch (err) {
+      setMicPermission('denied');
+      setError('No se pudo acceder al micrófono. Por favor permite el acceso en tu navegador.');
+      return false;
+    }
+  }, []);
 
   const start = useCallback(async () => {
     try {
@@ -27,7 +57,9 @@ export const useAudioRecording = () => {
       mediaRecorder.current.start(1000); // Chunk every 1s
       setState('recording');
       isRecordingRef.current = true;
+      setMicPermission('granted');
     } catch (err) {
+      setMicPermission('denied');
       setError('No se pudo acceder al micrófono');
       setState('idle');
     }
@@ -61,8 +93,10 @@ export const useAudioRecording = () => {
   return {
     state,
     error,
+    micPermission,
     isRecording: state === 'recording',
     isProcessing: state === 'processing',
+    requestMicPermission,
     start,
     stop,
   };

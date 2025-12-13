@@ -28,7 +28,7 @@ export const FILLER_AUDIO_PATHS = [
 ] as const;
 
 // UI settings
-export const TIMER_WARNING_THRESHOLD_SECONDS = 60; // Show warning at 1 minute left
+export const TIMER_WARNING_THRESHOLD_SECONDS = 30; // Show warning at 30 seconds left
 
 // Platforms for post suggestions
 export const SUPPORTED_PLATFORMS = [

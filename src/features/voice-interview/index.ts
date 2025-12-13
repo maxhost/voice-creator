@@ -19,3 +19,5 @@ export type {
   InterviewError,
   InterviewErrorCode,
 } from './model/types';
+
+export type { MicPermissionStatus } from './model/useAudioRecording';

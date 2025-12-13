@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useVoiceFlow, useAudioRecording } from '@/features/voice-interview';
 
 export const useInterviewPanel = () => {
@@ -25,12 +25,21 @@ export const useInterviewPanel = () => {
     onTimerEnd,
   } = useVoiceFlow();
 
-  const { isRecording: audioIsRecording, start: startAudioRecording, stop: stopAudioRecording } = useAudioRecording();
+  const {
+    isRecording: audioIsRecording,
+    micPermission,
+    error: micError,
+    requestMicPermission,
+    start: startAudioRecording,
+    stop: stopAudioRecording,
+  } = useAudioRecording();
+
   const isProcessingRef = useRef(false);
   const greetingPlayedRef = useRef(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastPlayedAudioRef = useRef<string | null>(null);
   const timerEndedRef = useRef(false);
+  const micPermissionRequestedRef = useRef(false);
 
   // Can only start new recording if time remaining and in waiting state
   const canRecord = isWaitingForUser && !isTranscribing && !isAiResponding && !isPlayingResponse && timeRemaining > 0;
@@ -85,6 +94,14 @@ export const useInterviewPanel = () => {
     }
   }, [isWaitingForUser, audioIsRecording, machineIsRecording, isTranscribing, isAiResponding, isPlayingResponse, onTimerEnd]);
 
+  // Request microphone permission when interview starts
+  useEffect(() => {
+    if (isInInterview && !micPermissionRequestedRef.current) {
+      micPermissionRequestedRef.current = true;
+      requestMicPermission();
+    }
+  }, [isInInterview, requestMicPermission]);
+
   // Play greeting when interview starts (in greeting state, only once)
   useEffect(() => {
     if (isGreeting && !greetingPlayedRef.current && userProfile) {
@@ -132,6 +149,8 @@ export const useInterviewPanel = () => {
     isPlayingResponse,
     isTimeUp,
     canRecord,
+    micPermission,
+    micError,
     handleStartRecording,
     handleStopRecording,
   };

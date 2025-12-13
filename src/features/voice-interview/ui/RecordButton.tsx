@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // Microphone icon (idle state)
 const MicIcon = () => (
@@ -58,6 +58,14 @@ export const RecordButton = ({
   disabled = false,
 }: RecordButtonProps) => {
   const [showSent, setShowSent] = useState(false);
+  // Use ref to track recording state for event handlers (avoids stale closure)
+  const isRecordingRef = useRef(false);
+  const isActiveRef = useRef(false); // Track if user is actively holding button
+
+  // Sync ref with prop
+  useEffect(() => {
+    isRecordingRef.current = isRecording;
+  }, [isRecording]);
 
   // Show sent icon briefly after recording stops
   useEffect(() => {
@@ -69,7 +77,9 @@ export const RecordButton = ({
 
   // When recording stops, show sent icon briefly
   const handleStop = () => {
-    if (!isRecording) return;
+    // Only process stop if we're actually recording/active
+    if (!isActiveRef.current) return;
+    isActiveRef.current = false;
     setShowSent(true);
     onStop();
     // Reset after animation
@@ -79,16 +89,19 @@ export const RecordButton = ({
   // Spacebar support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'Space' && !e.repeat && !disabled && !isProcessing) {
+      // Only start recording if not already active and conditions are met
+      if (e.code === 'Space' && !e.repeat && !disabled && !isProcessing && !isActiveRef.current) {
         e.preventDefault();
+        isActiveRef.current = true;
         onStart();
       }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
+      // Only stop if space is released and we're actually recording
+      if (e.code === 'Space' && isActiveRef.current) {
         e.preventDefault();
-        if (isRecording) handleStop();
+        handleStop();
       }
     };
 
@@ -99,14 +112,29 @@ export const RecordButton = ({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [disabled, isRecording, isProcessing, onStart]);
+  }, [disabled, isProcessing, onStart]);
 
   const handleMouseDown = () => {
     if (disabled || isProcessing) return;
+    isActiveRef.current = true;
     onStart();
   };
 
   const handleMouseUp = () => {
+    if (!isActiveRef.current) return;
+    handleStop();
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent ghost clicks on mobile
+    if (disabled || isProcessing) return;
+    isActiveRef.current = true;
+    onStart();
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    if (!isActiveRef.current) return;
     handleStop();
   };
 
@@ -139,8 +167,8 @@ export const RecordButton = ({
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        onTouchStart={handleMouseDown}
-        onTouchEnd={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         disabled={disabled || isProcessing}
         className={`w-28 h-28 rounded-full transition-all duration-200 flex items-center justify-center
                     ${getButtonStyle()}
