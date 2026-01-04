@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabase } from '@/shared/api/supabase';
+import type { ContactMessageReason } from '@/shared/api/supabase.types';
 
 const json = NextResponse.json;
 
@@ -100,55 +102,31 @@ export async function POST(request: NextRequest) {
       return json({ error: 'Message is too long' }, { status: 400 });
     }
 
-    // Build email content
-    const emailSubject = `[Brain to Post Contact] ${REASON_LABELS[reason]} - ${name}`;
-    const emailBody = `
-New contact form submission from Brain to Post (braintopost.com)
-
-Name: ${name.trim()}
-Email: ${email.trim()}
-Reason: ${REASON_LABELS[reason]}
-IP: ${ip}
-Time: ${new Date().toISOString()}
-
-Message:
-${message.trim()}
-    `.trim();
-
-    // Send email using a simple fetch to an email service
-    // For now, we'll use Netlify's built-in form handling or a simple email API
-    // You can integrate with SendGrid, Resend, or similar later
-
-    // Option 1: Log for now (you can see in Netlify Functions logs)
-    console.log('=== CONTACT FORM SUBMISSION ===');
-    console.log('To: hola@nocodemy.co');
-    console.log('Subject:', emailSubject);
-    console.log('Body:', emailBody);
-    console.log('================================');
-
-    // Option 2: If you have RESEND_API_KEY configured, send actual email
-    const resendApiKey = process.env.RESEND_API_KEY;
-    if (resendApiKey) {
-      const emailResponse = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${resendApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: 'Brain to Post <noreply@braintopost.com>',
-          to: ['hola@nocodemy.co'],
-          reply_to: email.trim(),
-          subject: emailSubject,
-          text: emailBody,
-        }),
+    // Save to database
+    const supabase = getSupabase();
+    const { error: dbError } = await supabase
+      .from('contact_messages')
+      .insert({
+        name: name.trim(),
+        email: email.trim(),
+        reason: reason as ContactMessageReason,
+        message: message.trim(),
+        ip_address: ip,
+        status: 'received',
       });
 
-      if (!emailResponse.ok) {
-        console.error('Failed to send email:', await emailResponse.text());
-        // Don't expose error to user, just log it
-      }
+    if (dbError) {
+      console.error('Failed to save contact message:', dbError);
+      return json({ error: 'Failed to send message' }, { status: 500 });
     }
+
+    // Log for backup
+    console.log('=== CONTACT FORM SUBMISSION ===');
+    console.log('Name:', name.trim());
+    console.log('Email:', email.trim());
+    console.log('Reason:', REASON_LABELS[reason]);
+    console.log('Message:', message.trim().substring(0, 100) + '...');
+    console.log('================================');
 
     return json({ success: true });
   } catch (error) {

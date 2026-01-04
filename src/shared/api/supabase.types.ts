@@ -35,6 +35,36 @@ export type PaymentSessionUpdate = {
   used_at?: string | null;
 };
 
+// Contact Messages
+export type ContactMessageStatus = 'received' | 'in_progress' | 'responded' | 'closed';
+export type ContactMessageReason = 'problem' | 'payment' | 'billing' | 'other';
+
+export type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  reason: ContactMessageReason;
+  message: string;
+  status: ContactMessageStatus;
+  ip_address: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContactMessageInsert = {
+  name: string;
+  email: string;
+  reason: ContactMessageReason;
+  message: string;
+  status?: ContactMessageStatus;
+  ip_address?: string | null;
+};
+
+export type ContactMessageUpdate = {
+  status?: ContactMessageStatus;
+  updated_at?: string;
+};
+
 export type Json =
   | string
   | number
@@ -67,6 +97,12 @@ export type Database = {
         Row: PaymentSession;
         Insert: PaymentSessionInsert;
         Update: PaymentSessionUpdate;
+        Relationships: [];
+      };
+      contact_messages: {
+        Row: ContactMessage;
+        Insert: ContactMessageInsert;
+        Update: ContactMessageUpdate;
         Relationships: [];
       };
     };
