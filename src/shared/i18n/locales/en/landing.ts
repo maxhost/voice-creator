@@ -5,13 +5,13 @@ export const landing = {
   hero: {
     earlyAccess: 'Early Access',
     beAmongFirst: 'Be among the first to try it',
-    title1: 'AI-Powered Content Ideas',
-    title2: 'in 10 Minutes',
-    subtitle1: 'Turn Your Expertise Into',
-    subtitle2: 'Viral Content',
-    description1: 'Have a 10-minute voice conversation with AI. Walk away with',
-    description2: '4-7 ready-to-post content ideas',
-    description3: 'tailored to your unique insights.',
+    title1: 'You Have Ideas.',
+    title2: "They're Just Stuck.",
+    subtitle1: 'You Have The Knowledge.',
+    subtitle2: "You Just Can't Get It Out of Your Head.",
+    description1: 'A 10-minute AI conversation pulls out what you already know',
+    description2: "but can't write down alone.",
+    description3: 'Walk away with 4-7 ready-to-post content ideas.',
     cta: 'Start Your Interview',
     earlyAccessPricing: 'Early access pricing',
     noSubscription: 'No subscription required',
@@ -92,6 +92,10 @@ export const landing = {
     tag: 'FAQ',
     title: 'Questions? Answers.',
     items: [
+      {
+        question: 'What do I need to get started?',
+        answer: "Just click the button, pay via Stripe, and you're back in the interview space. All you need is a laptop with a microphone, an external mic connected to your computer, or a smartphone. That's it - no downloads, no accounts, no setup.",
+      },
       {
         question: 'How does the voice interview work?',
         answer: "After payment, you'll enter a 10-minute conversation with our AI. You hold a button to talk (push-to-talk), and the AI responds with smart follow-up questions. It's like talking to an expert interviewer who pulls out your best ideas.",

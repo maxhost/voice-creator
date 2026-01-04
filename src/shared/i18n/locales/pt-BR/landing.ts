@@ -5,13 +5,13 @@ export const landing = {
   hero: {
     earlyAccess: 'Acesso Antecipado',
     beAmongFirst: 'Esteja entre os primeiros a experimentar',
-    title1: 'Ideias de Conteúdo com IA',
-    title2: 'em 10 Minutos',
-    subtitle1: 'Transforme Sua Expertise em',
-    subtitle2: 'Conteúdo Viral',
-    description1: 'Tenha uma conversa de voz de 10 minutos com IA. Saia com',
-    description2: '4-7 ideias de conteúdo prontas para publicar',
-    description3: 'personalizadas para seus insights únicos.',
+    title1: 'Você Tem Ideias.',
+    title2: 'Elas Só Estão Presas.',
+    subtitle1: 'Você Tem O Conhecimento.',
+    subtitle2: 'Só Não Consegue Tirar Da Cabeça.',
+    description1: 'Uma conversa de 10 minutos com IA tira o que você já sabe',
+    description2: 'mas não consegue escrever sozinho.',
+    description3: 'Saia com 4-7 ideias de conteúdo prontas para publicar.',
     cta: 'Começar Sua Entrevista',
     earlyAccessPricing: 'Preço de acesso antecipado',
     noSubscription: 'Sem assinatura necessária',
@@ -92,6 +92,10 @@ export const landing = {
     tag: 'PERGUNTAS FREQUENTES',
     title: 'Dúvidas? Respostas.',
     items: [
+      {
+        question: 'O que preciso para começar?',
+        answer: 'Basta clicar no botão, pagar via Stripe e você volta ao espaço de entrevista. Só precisa de um notebook com microfone, um microfone externo conectado ao computador, ou um celular. É só isso - sem downloads, sem contas, sem configuração.',
+      },
       {
         question: 'Como funciona a entrevista por voz?',
         answer: 'Após o pagamento, você entrará em uma conversa de 10 minutos com nossa IA. Você segura um botão para falar (pressionar para falar), e a IA responde com perguntas inteligentes de acompanhamento. É como conversar com um entrevistador especialista que extrai suas melhores ideias.',

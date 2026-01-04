@@ -5,13 +5,13 @@ export const landing = {
   hero: {
     earlyAccess: 'Accés Anticipat',
     beAmongFirst: 'Sigues dels primers en provar-ho',
-    title1: 'Idees de Contingut amb IA',
-    title2: 'en 10 Minuts',
-    subtitle1: 'Converteix la Teva Expertesa en',
-    subtitle2: 'Contingut Viral',
-    description1: 'Mantén una conversa de veu de 10 minuts amb IA. Sortirás amb',
-    description2: '4-7 idees de contingut llestes per publicar',
-    description3: 'adaptades a les teves perspectives úniques.',
+    title1: 'Tens Idees.',
+    title2: 'Només Estan Atrapades.',
+    subtitle1: 'Tens El Coneixement.',
+    subtitle2: 'Només No El Pots Treure Del Cap.',
+    description1: 'Una conversa de 10 minuts amb IA treu el que ja saps',
+    description2: 'però no pots escriure sol.',
+    description3: 'Surt amb 4-7 idees de contingut llestes per publicar.',
     cta: 'Comença la Teva Entrevista',
     earlyAccessPricing: 'Preu d\'accés anticipat',
     noSubscription: 'No cal subscripció',
@@ -92,6 +92,10 @@ export const landing = {
     tag: 'PREGUNTES FREQÜENTS',
     title: 'Preguntes? Respostes.',
     items: [
+      {
+        question: 'Què necessito per començar?',
+        answer: 'Només fes clic al botó, paga via Stripe i tornes a l\'espai de l\'entrevista. Només necessites un portàtil amb micròfon, un micròfon extern connectat a l\'ordinador, o un telèfon mòbil. Això és tot - sense descàrregues, sense comptes, sense configuració.',
+      },
       {
         question: 'Com funciona l\'entrevista de veu?',
         answer: 'Després del pagament, entraràs en una conversa de 10 minuts amb la nostra IA. Mantens premut un botó per parlar (polsar per parlar), i la IA respon amb preguntes de seguiment intel·ligents. És com parlar amb un entrevistador expert que extreu les teves millors idees.',

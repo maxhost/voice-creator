@@ -24,13 +24,13 @@ export const FooterSection = () => {
 
           {/* Links */}
           <div className="flex items-center gap-8 text-sm">
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/privacy" className="text-gray-400 hover:text-white transition-colors">
               {landing.footer.privacy}
             </a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/terms" className="text-gray-400 hover:text-white transition-colors">
               {landing.footer.terms}
             </a>
-            <a href="mailto:support@voicecreator.ai" className="text-gray-400 hover:text-white transition-colors">
+            <a href="/contact" className="text-gray-400 hover:text-white transition-colors">
               {landing.footer.contact}
             </a>
           </div>

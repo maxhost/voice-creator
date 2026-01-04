@@ -5,13 +5,13 @@ export const landing = {
   hero: {
     earlyAccess: 'Accès anticipé',
     beAmongFirst: 'Soyez parmi les premiers à l\'essayer',
-    title1: 'Idées de contenu alimentées par l\'IA',
-    title2: 'en 10 minutes',
-    subtitle1: 'Transformez votre expertise en',
-    subtitle2: 'contenu viral',
-    description1: 'Ayez une conversation vocale de 10 minutes avec l\'IA. Repartez avec',
-    description2: '4 à 7 idées de contenu prêtes à publier',
-    description3: 'adaptées à vos connaissances uniques.',
+    title1: 'Vous avez des idées.',
+    title2: 'Elles sont juste bloquées.',
+    subtitle1: 'Vous avez les connaissances.',
+    subtitle2: 'Vous n\'arrivez pas à les sortir de votre tête.',
+    description1: 'Une conversation de 10 minutes avec l\'IA fait ressortir ce que vous savez déjà',
+    description2: 'mais ne pouvez pas écrire seul.',
+    description3: 'Repartez avec 4 à 7 idées de contenu prêtes à publier.',
     cta: 'Commencer votre entretien',
     earlyAccessPricing: 'Tarif d\'accès anticipé',
     noSubscription: 'Aucun abonnement requis',
@@ -92,6 +92,10 @@ export const landing = {
     tag: 'FAQ',
     title: 'Des questions ? Des réponses.',
     items: [
+      {
+        question: 'De quoi ai-je besoin pour commencer ?',
+        answer: 'Cliquez simplement sur le bouton, payez via Stripe et vous revenez dans l\'espace d\'entretien. Vous n\'avez besoin que d\'un ordinateur avec microphone, d\'un micro externe connecté à votre ordinateur, ou d\'un smartphone. C\'est tout - pas de téléchargements, pas de compte, pas de configuration.',
+      },
       {
         question: 'Comment fonctionne l\'entretien vocal ?',
         answer: 'Après le paiement, vous entrerez dans une conversation de 10 minutes avec notre IA. Vous maintenez un bouton pour parler (appuyez pour parler), et l\'IA répond avec des questions de suivi intelligentes. C\'est comme parler à un intervieweur expert qui extrait vos meilleures idées.',

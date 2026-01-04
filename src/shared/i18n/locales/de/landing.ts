@@ -5,13 +5,13 @@ export const landing = {
   hero: {
     earlyAccess: 'Early Access',
     beAmongFirst: 'Sei einer der Ersten, die es ausprobieren',
-    title1: 'KI-gestützte Content-Ideen',
-    title2: 'in 10 Minuten',
-    subtitle1: 'Verwandle dein Fachwissen in',
-    subtitle2: 'viralen Content',
-    description1: 'Führe ein 10-minütiges Gespräch mit der KI. Erhalte',
-    description2: '4-7 fertige Content-Ideen',
-    description3: 'zugeschnitten auf deine einzigartigen Erkenntnisse.',
+    title1: 'Du hast Ideen.',
+    title2: 'Sie stecken nur fest.',
+    subtitle1: 'Du hast das Wissen.',
+    subtitle2: 'Du kannst es nur nicht aus deinem Kopf bekommen.',
+    description1: 'Ein 10-minütiges KI-Gespräch holt heraus, was du bereits weißt,',
+    description2: 'aber alleine nicht aufschreiben kannst.',
+    description3: 'Geh mit 4-7 fertigen Content-Ideen nach Hause.',
     cta: 'Starte dein Interview',
     earlyAccessPricing: 'Early-Access-Preis',
     noSubscription: 'Kein Abo erforderlich',
@@ -92,6 +92,10 @@ export const landing = {
     tag: 'FAQ',
     title: 'Fragen? Antworten.',
     items: [
+      {
+        question: 'Was brauche ich, um loszulegen?',
+        answer: 'Klick einfach auf den Button, zahle über Stripe und du bist zurück im Interview-Bereich. Du brauchst nur einen Laptop mit Mikrofon, ein externes Mikrofon an deinem Computer oder ein Smartphone. Das war\'s - keine Downloads, keine Accounts, kein Setup.',
+      },
       {
         question: 'Wie funktioniert das Voice-Interview?',
         answer: 'Nach der Zahlung beginnst du ein 10-minütiges Gespräch mit unserer KI. Du hältst einen Button gedrückt, um zu sprechen (Push-to-Talk), und die KI antwortet mit smarten Anschlussfragen. Es ist wie ein Gespräch mit einem Experten-Interviewer, der deine besten Ideen herausholt.',
