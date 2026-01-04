@@ -6,7 +6,7 @@ import './styles/globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Voice Creator - Genera ideas de contenido con IA',
+  title: 'Brain to Post - Genera ideas de contenido con IA',
   description: 'Entrevista con IA para generar ideas de posts para redes sociales',
 };
 

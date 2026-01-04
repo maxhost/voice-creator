@@ -101,9 +101,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Build email content
-    const emailSubject = `[Voice Creator Contact] ${REASON_LABELS[reason]} - ${name}`;
+    const emailSubject = `[Brain to Post Contact] ${REASON_LABELS[reason]} - ${name}`;
     const emailBody = `
-New contact form submission from Voice Creator
+New contact form submission from Brain to Post (braintopost.com)
 
 Name: ${name.trim()}
 Email: ${email.trim()}
@@ -136,7 +136,7 @@ ${message.trim()}
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Voice Creator <noreply@voicecreator.ai>',
+          from: 'Brain to Post <noreply@braintopost.com>',
           to: ['hola@nocodemy.co'],
           reply_to: email.trim(),
           subject: emailSubject,

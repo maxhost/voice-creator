@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - Voice Creator',
-  description: 'Terms of Service for Voice Creator',
+  title: 'Terms of Service - Brain to Post',
+  description: 'Terms of Service for Brain to Post',
 };
 
 export default function TermsOfService() {
@@ -16,7 +16,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Agreement to Terms</h2>
             <p className="text-gray-700 leading-relaxed">
-              By accessing or using Voice Creator (&quot;Service&quot;), you agree to be bound by these
+              By accessing or using Brain to Post (&quot;Service&quot;), you agree to be bound by these
               Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, please do not use
               our Service.
             </p>
@@ -25,7 +25,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Description of Service</h2>
             <p className="text-gray-700 leading-relaxed">
-              Voice Creator is an AI-powered service that conducts voice interviews to help users
+              Brain to Post is an AI-powered service that conducts voice interviews to help users
               generate content ideas for social media platforms. The service includes:
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2 mt-4">
@@ -81,7 +81,7 @@ export default function TermsOfService() {
             </p>
             <h3 className="text-lg font-medium text-gray-800 mt-6 mb-3">6.2 Our Service</h3>
             <p className="text-gray-700 leading-relaxed">
-              Voice Creator, including its design, features, and underlying technology, is protected by
+              Brain to Post, including its design, features, and underlying technology, is protected by
               intellectual property laws. You may not copy, modify, or create derivative works of our Service.
             </p>
           </section>
@@ -102,7 +102,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">8. Limitation of Liability</h2>
             <p className="text-gray-700 leading-relaxed">
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, VOICE CREATOR AND ITS OPERATORS SHALL NOT BE
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, BRAIN TO POST AND ITS OPERATORS SHALL NOT BE
               LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES,
               INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITIES,
               ARISING FROM YOUR USE OF THE SERVICE.
@@ -159,10 +159,8 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">14. Contact</h2>
             <p className="text-gray-700 leading-relaxed">
-              For questions about these Terms, please contact us at:
-            </p>
-            <p className="text-gray-700 mt-4">
-              <strong>Email:</strong> <a href="mailto:legal@voicecreator.ai" className="text-primary-600 hover:underline">legal@voicecreator.ai</a>
+              For questions about these Terms, please contact us through our{' '}
+              <a href="/contact" className="text-primary-600 hover:underline">contact page</a>.
             </p>
           </section>
         </div>

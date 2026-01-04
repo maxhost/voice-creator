@@ -114,7 +114,7 @@ export const landing = {
       },
       {
         question: 'Como isso é diferente do ChatGPT?',
-        answer: 'O ChatGPT te dá respostas genéricas baseadas em prompts que você escreve. O Voice Creator é uma experiência guiada onde a IA te entrevista para extrair SUAS histórias e expertise únicas. O resultado é conteúdo que parece você, não IA genérica.',
+        answer: 'O ChatGPT te dá respostas genéricas baseadas em prompts que você escreve. O Brain to Post é uma experiência guiada onde a IA te entrevista para extrair SUAS histórias e expertise únicas. O resultado é conteúdo que parece você, não IA genérica.',
       },
       {
         question: 'E se a sessão não gerar ideias suficientes?',
@@ -138,10 +138,10 @@ export const landing = {
     pricing: 'Preço de acesso antecipado · Sem assinatura',
   },
   footer: {
-    brand: 'Voice Creator',
+    brand: 'Brain to Post',
     privacy: 'Política de Privacidade',
     terms: 'Termos de Serviço',
     contact: 'Contato',
-    copyright: 'Voice Creator. Todos os direitos reservados.',
+    copyright: 'Brain to Post. Todos os direitos reservados.',
   },
 };

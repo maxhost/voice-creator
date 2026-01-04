@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Voice Creator',
-  description: 'Privacy Policy for Voice Creator',
+  title: 'Privacy Policy - Brain to Post',
+  description: 'Privacy Policy for Brain to Post',
 };
 
 export default function PrivacyPolicy() {
@@ -16,7 +16,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Introduction</h2>
             <p className="text-gray-700 leading-relaxed">
-              Voice Creator (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to protecting your privacy.
+              Brain to Post (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to protecting your privacy.
               This Privacy Policy explains how we collect, use, disclose, and safeguard your information
               when you use our voice interview service.
             </p>
@@ -128,10 +128,8 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">11. Contact Us</h2>
             <p className="text-gray-700 leading-relaxed">
-              If you have any questions about this Privacy Policy or our data practices, please contact us at:
-            </p>
-            <p className="text-gray-700 mt-4">
-              <strong>Email:</strong> <a href="mailto:privacy@voicecreator.ai" className="text-primary-600 hover:underline">privacy@voicecreator.ai</a>
+              If you have any questions about this Privacy Policy or our data practices, please contact us
+              through our <a href="/contact" className="text-primary-600 hover:underline">contact page</a>.
             </p>
           </section>
         </div>

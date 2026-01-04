@@ -33,7 +33,7 @@ export const results = {
     download: 'Descarregar PDF',
     preview: 'Previsualització PDF',
     title: 'Idees de Contingut',
-    generatedBy: 'Generat per Voice Creator',
+    generatedBy: 'Generat per Brain to Post',
     interviewDuration: 'Entrevista:',
     alternativeHooks: 'Ganxos alternatius:',
     pageOf: 'Pàgina',
