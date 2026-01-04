@@ -3,33 +3,7 @@
 import { RecordButton, TranscriptDisplay, TimerDisplay, ThinkingIndicator } from '@/features/voice-interview';
 import { useInterviewPanel } from '../model/useInterviewPanel';
 import { TIMER_WARNING_THRESHOLD_SECONDS } from '@/shared/config/constants';
-
-const LANGUAGE_HINT: Record<string, string> = {
-  es: 'Puedes hablar en cualquier idioma y la IA responderá en ese idioma',
-  en: 'You can speak in any language and the AI will respond in that language',
-  fr: 'Vous pouvez parler dans n\'importe quelle langue et l\'IA répondra dans cette langue',
-  de: 'Sie können in jeder Sprache sprechen und die KI wird in dieser Sprache antworten',
-  pt: 'Você pode falar em qualquer idioma e a IA responderá nesse idioma',
-  it: 'Puoi parlare in qualsiasi lingua e l\'IA risponderà in quella lingua',
-};
-
-const TIME_UP_MESSAGE: Record<string, string> = {
-  es: 'El tiempo ha terminado. Espera un momento mientras generamos tus ideas...',
-  en: 'Time is up. Please wait while we generate your ideas...',
-  fr: 'Le temps est écoulé. Veuillez patienter pendant que nous générons vos idées...',
-  de: 'Die Zeit ist abgelaufen. Bitte warten Sie, während wir Ihre Ideen generieren...',
-  pt: 'O tempo acabou. Aguarde enquanto geramos suas ideias...',
-  it: 'Il tempo è scaduto. Attendi mentre generiamo le tue idee...',
-};
-
-const LAST_RESPONSE_WARNING: Record<string, string> = {
-  es: '⚠️ Última oportunidad para hablar. La IA dará su respuesta final.',
-  en: '⚠️ Last chance to speak. The AI will give its final response.',
-  fr: "⚠️ Dernière chance de parler. L'IA donnera sa réponse finale.",
-  de: '⚠️ Letzte Gelegenheit zu sprechen. Die KI gibt ihre letzte Antwort.',
-  pt: '⚠️ Última chance de falar. A IA dará sua resposta final.',
-  it: "⚠️ Ultima possibilità di parlare. L'IA darà la sua risposta finale.",
-};
+import { useLanguage, getTranslation, interview } from '@/shared/i18n';
 
 // Status banner component
 const StatusBanner = ({
@@ -89,10 +63,7 @@ export const InterviewPanel = () => {
     handleStopRecording,
   } = useInterviewPanel();
 
-  const browserLang = typeof navigator !== 'undefined' ? navigator.language.split('-')[0] : 'en';
-  const languageHint = LANGUAGE_HINT[browserLang] || LANGUAGE_HINT.en;
-  const timeUpMessage = TIME_UP_MESSAGE[browserLang] || TIME_UP_MESSAGE.en;
-  const lastResponseWarning = LAST_RESPONSE_WARNING[browserLang] || LAST_RESPONSE_WARNING.en;
+  const lang = useLanguage();
   const isInWarningZone = timeRemaining > 0 && timeRemaining <= TIMER_WARNING_THRESHOLD_SECONDS;
 
   // Determine current status
@@ -105,42 +76,6 @@ export const InterviewPanel = () => {
   };
 
   const status = getStatus();
-
-  // Status messages in user's language
-  const statusMessages: Record<string, Record<string, string>> = {
-    'your-turn': {
-      es: 'Tu turno - Mantén presionado para hablar',
-      en: 'Your turn - Hold to speak',
-      fr: 'Votre tour - Maintenez pour parler',
-      de: 'Dein Zug - Gedrückt halten zum Sprechen',
-      pt: 'Sua vez - Segure para falar',
-      it: 'Il tuo turno - Tieni premuto per parlare',
-    },
-    'recording': {
-      es: 'Grabando... Suelta para enviar',
-      en: 'Recording... Release to send',
-      fr: 'Enregistrement... Relâchez pour envoyer',
-      de: 'Aufnahme... Loslassen zum Senden',
-      pt: 'Gravando... Solte para enviar',
-      it: 'Registrazione... Rilascia per inviare',
-    },
-    'ai-speaking': {
-      es: 'La IA está hablando...',
-      en: 'AI is speaking...',
-      fr: "L'IA parle...",
-      de: 'KI spricht...',
-      pt: 'A IA está falando...',
-      it: "L'IA sta parlando...",
-    },
-    'processing': {
-      es: 'Procesando...',
-      en: 'Processing...',
-      fr: 'Traitement...',
-      de: 'Verarbeitung...',
-      pt: 'Processando...',
-      it: 'Elaborazione...',
-    },
-  };
 
   // Show time up message when interview ends
   if (status === 'time-up') {
@@ -157,7 +92,9 @@ export const InterviewPanel = () => {
         <div className="bg-primary-50 border border-primary-200 rounded-lg p-6 text-center">
           <div className="flex items-center justify-center gap-3">
             <div className="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-primary-700 font-medium">{timeUpMessage}</p>
+            <p className="text-primary-700 font-medium">
+              {getTranslation(interview.panel.timeUp, lang)}
+            </p>
           </div>
         </div>
       </div>
@@ -174,25 +111,25 @@ export const InterviewPanel = () => {
       <div className="flex justify-center">
         {status === 'your-turn' && (
           <StatusBanner type="your-turn">
-            {statusMessages['your-turn'][browserLang] || statusMessages['your-turn'].en}
+            {getTranslation(interview.panel.status.yourTurn, lang)}
           </StatusBanner>
         )}
         {status === 'recording' && (
           <div className="flex items-center justify-center gap-2 px-4 py-2 rounded-full border-2 bg-red-100 border-red-400 text-red-800">
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             <span className="font-medium text-sm">
-              {statusMessages['recording'][browserLang] || statusMessages['recording'].en}
+              {getTranslation(interview.panel.status.recording, lang)}
             </span>
           </div>
         )}
         {status === 'ai-speaking' && (
           <StatusBanner type="ai-speaking">
-            {statusMessages['ai-speaking'][browserLang] || statusMessages['ai-speaking'].en}
+            {getTranslation(interview.panel.status.aiSpeaking, lang)}
           </StatusBanner>
         )}
         {status === 'processing' && (
           <StatusBanner type="processing">
-            {statusMessages['processing'][browserLang] || statusMessages['processing'].en}
+            {getTranslation(interview.panel.status.processing, lang)}
           </StatusBanner>
         )}
       </div>
@@ -200,13 +137,17 @@ export const InterviewPanel = () => {
       {/* Warning banner when time is running out */}
       {isInWarningZone && (
         <div className="bg-red-50 border-2 border-red-400 rounded-lg p-3 text-center animate-pulse">
-          <p className="text-sm font-semibold text-red-700">{lastResponseWarning}</p>
+          <p className="text-sm font-semibold text-red-700">
+            ⚠️ {getTranslation(interview.panel.lastResponseWarning, lang)}
+          </p>
         </div>
       )}
 
       {turns.length === 0 && !isTimeUp && status === 'your-turn' && !isInWarningZone && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
-          <p className="text-sm text-blue-700">{languageHint}</p>
+          <p className="text-sm text-blue-700">
+            {getTranslation(interview.panel.languageHint, lang)}
+          </p>
         </div>
       )}
 
@@ -239,8 +180,7 @@ export const InterviewPanel = () => {
 
       <div className="text-center">
         <p className="text-xs text-gray-400">
-          {browserLang === 'es' ? 'Click y mantén • Toca y mantén • O presiona espacio' :
-           'Click and hold • Touch and hold • Or press spacebar'}
+          {getTranslation(interview.panel.instructions, lang)}
         </p>
       </div>
     </div>

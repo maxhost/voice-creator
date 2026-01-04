@@ -1,5 +1,7 @@
 'use client';
 
+import { useLanguage, getTranslation, payment } from '@/shared/i18n';
+
 type PaymentButtonProps = {
   onClick: () => void;
   disabled?: boolean;
@@ -11,6 +13,8 @@ export const PaymentButton = ({
   disabled = false,
   loading = false,
 }: PaymentButtonProps) => {
+  const lang = useLanguage();
+
   return (
     <button
       onClick={onClick}
@@ -19,7 +23,7 @@ export const PaymentButton = ({
                  font-semibold rounded-lg text-lg transition-default
                  disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      {loading ? 'Procesando...' : 'Comenzar - $5'}
+      {loading ? getTranslation(payment.button.processing, lang) : `${getTranslation(payment.button.start, lang)} - $5`}
     </button>
   );
 };

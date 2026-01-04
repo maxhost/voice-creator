@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
+import { useLanguage, getTranslation } from '@/shared/i18n';
+import { interview } from '@/shared/i18n';
 import type { SocialNetwork, UserProfile } from '@/app/model/types';
 
 const SOCIAL_NETWORKS: { id: SocialNetwork; label: string; icon: string }[] = [
@@ -12,93 +14,6 @@ const SOCIAL_NETWORKS: { id: SocialNetwork; label: string; icon: string }[] = [
   { id: 'facebook', label: 'Facebook', icon: '👤' },
 ];
 
-type Translations = {
-  title: string;
-  subtitle: string;
-  nameLabel: string;
-  namePlaceholder: string;
-  networksLabel: string;
-  networksHint: string;
-  expertiseLabel: string;
-  expertisePlaceholder: string;
-  submit: string;
-};
-
-const TRANSLATIONS: Record<string, Translations> = {
-  es: {
-    title: 'Antes de empezar...',
-    subtitle: 'Cuéntanos un poco sobre ti para personalizar tu entrevista',
-    nameLabel: 'Tu nombre',
-    namePlaceholder: '¿Cómo te llamas?',
-    networksLabel: '¿Para qué redes quieres crear contenido?',
-    networksHint: 'Selecciona al menos una red social',
-    expertiseLabel: '¿Sobre qué tema te gustaría crear contenido?',
-    expertisePlaceholder: 'Ej: Soy diseñador gráfico especializado en branding para startups. Me encanta enseñar sobre identidad visual y tipografía.',
-    submit: 'Comenzar entrevista',
-  },
-  en: {
-    title: 'Before we start...',
-    subtitle: 'Tell us a bit about yourself to personalize your interview',
-    nameLabel: 'Your name',
-    namePlaceholder: 'What\'s your name?',
-    networksLabel: 'Which social networks do you want to create content for?',
-    networksHint: 'Select at least one social network',
-    expertiseLabel: 'What topic would you like to create content about?',
-    expertisePlaceholder: 'E.g.: I\'m a graphic designer specialized in branding for startups. I love teaching about visual identity and typography.',
-    submit: 'Start interview',
-  },
-  fr: {
-    title: 'Avant de commencer...',
-    subtitle: 'Parlez-nous un peu de vous pour personnaliser votre entretien',
-    nameLabel: 'Votre nom',
-    namePlaceholder: 'Comment vous appelez-vous?',
-    networksLabel: 'Pour quels réseaux sociaux voulez-vous créer du contenu?',
-    networksHint: 'Sélectionnez au moins un réseau social',
-    expertiseLabel: 'Sur quel sujet aimeriez-vous créer du contenu?',
-    expertisePlaceholder: 'Ex: Je suis graphiste spécialisé en branding pour startups. J\'adore enseigner l\'identité visuelle et la typographie.',
-    submit: 'Commencer l\'entretien',
-  },
-  de: {
-    title: 'Bevor wir anfangen...',
-    subtitle: 'Erzählen Sie uns etwas über sich, um Ihr Interview zu personalisieren',
-    nameLabel: 'Ihr Name',
-    namePlaceholder: 'Wie heißen Sie?',
-    networksLabel: 'Für welche sozialen Netzwerke möchten Sie Inhalte erstellen?',
-    networksHint: 'Wählen Sie mindestens ein soziales Netzwerk',
-    expertiseLabel: 'Über welches Thema möchten Sie Inhalte erstellen?',
-    expertisePlaceholder: 'Z.B.: Ich bin Grafikdesigner spezialisiert auf Branding für Startups. Ich unterrichte gerne über visuelle Identität und Typografie.',
-    submit: 'Interview starten',
-  },
-  pt: {
-    title: 'Antes de começar...',
-    subtitle: 'Conte-nos um pouco sobre você para personalizar sua entrevista',
-    nameLabel: 'Seu nome',
-    namePlaceholder: 'Qual é o seu nome?',
-    networksLabel: 'Para quais redes sociais você quer criar conteúdo?',
-    networksHint: 'Selecione pelo menos uma rede social',
-    expertiseLabel: 'Sobre qual tema você gostaria de criar conteúdo?',
-    expertisePlaceholder: 'Ex: Sou designer gráfico especializado em branding para startups. Adoro ensinar sobre identidade visual e tipografia.',
-    submit: 'Iniciar entrevista',
-  },
-  it: {
-    title: 'Prima di iniziare...',
-    subtitle: 'Raccontaci un po\' di te per personalizzare la tua intervista',
-    nameLabel: 'Il tuo nome',
-    namePlaceholder: 'Come ti chiami?',
-    networksLabel: 'Per quali social network vuoi creare contenuti?',
-    networksHint: 'Seleziona almeno un social network',
-    expertiseLabel: 'Su quale argomento vorresti creare contenuti?',
-    expertisePlaceholder: 'Es: Sono un grafico specializzato in branding per startup. Mi piace insegnare identità visiva e tipografia.',
-    submit: 'Inizia intervista',
-  },
-};
-
-function getBrowserLanguage(): string {
-  if (typeof navigator === 'undefined') return 'en';
-  const lang = navigator.language.split('-')[0].toLowerCase();
-  return TRANSLATIONS[lang] ? lang : 'en';
-}
-
 type OnboardingModalProps = {
   onComplete: (profile: UserProfile) => void;
 };
@@ -108,8 +23,7 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
   const [selectedNetworks, setSelectedNetworks] = useState<SocialNetwork[]>([]);
   const [expertise, setExpertise] = useState('');
 
-  const lang = useMemo(() => getBrowserLanguage(), []);
-  const t = TRANSLATIONS[lang];
+  const lang = useLanguage();
 
   const toggleNetwork = (network: SocialNetwork) => {
     setSelectedNetworks((prev) =>
@@ -138,31 +52,31 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
         <div className="p-6 space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900">
-              {t.title}
+              {getTranslation(interview.onboarding.title, lang)}
             </h2>
             <p className="text-gray-600 mt-2">
-              {t.subtitle}
+              {getTranslation(interview.onboarding.subtitle, lang)}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                {t.nameLabel}
+                {getTranslation(interview.onboarding.nameLabel, lang)}
               </label>
               <input
                 type="text"
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={t.namePlaceholder}
+                placeholder={getTranslation(interview.onboarding.namePlaceholder, lang)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t.networksLabel}
+                {getTranslation(interview.onboarding.networksLabel, lang)}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {SOCIAL_NETWORKS.map((network) => (
@@ -182,19 +96,19 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
                 ))}
               </div>
               {selectedNetworks.length === 0 && (
-                <p className="text-sm text-gray-500 mt-2">{t.networksHint}</p>
+                <p className="text-sm text-gray-500 mt-2">{getTranslation(interview.onboarding.networksHint, lang)}</p>
               )}
             </div>
 
             <div>
               <label htmlFor="expertise" className="block text-sm font-medium text-gray-700 mb-2">
-                {t.expertiseLabel}
+                {getTranslation(interview.onboarding.expertiseLabel, lang)}
               </label>
               <textarea
                 id="expertise"
                 value={expertise}
                 onChange={(e) => setExpertise(e.target.value.slice(0, 400))}
-                placeholder={t.expertisePlaceholder}
+                placeholder={getTranslation(interview.onboarding.expertisePlaceholder, lang)}
                 rows={3}
                 maxLength={400}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none text-gray-900"
@@ -213,7 +127,7 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
             >
-              {t.submit}
+              {getTranslation(interview.onboarding.submit, lang)}
             </button>
           </form>
         </div>

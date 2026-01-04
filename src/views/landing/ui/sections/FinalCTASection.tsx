@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/shared/ui';
+import { useLanguage, getTranslation, landing } from '@/shared/i18n';
 
 type FinalCTASectionProps = {
   onCtaClick: () => void;
@@ -9,6 +10,8 @@ type FinalCTASectionProps = {
 };
 
 export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps) => {
+  const lang = useLanguage();
+
   return (
     <section className="py-24 bg-gradient-to-br from-primary-600 to-purple-700 relative overflow-hidden">
       {/* Background decoration */}
@@ -24,9 +27,9 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
           viewport={{ once: true }}
           className="text-4xl md:text-5xl font-bold text-white mb-6"
         >
-          Your next week of content
+          {getTranslation(landing.finalCta.title1, lang)}
           <br />
-          starts with a 10-minute conversation
+          {getTranslation(landing.finalCta.title2, lang)}
         </motion.h2>
 
         <motion.p
@@ -36,7 +39,7 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
           transition={{ delay: 0.1 }}
           className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto"
         >
-          Stop struggling for ideas. Let AI extract the gold that's already in your head.
+          {getTranslation(landing.finalCta.subtitle, lang)}
         </motion.p>
 
         <motion.div
@@ -53,7 +56,7 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
             loading={isLoading}
             className="bg-white hover:bg-gray-100 text-gray-900"
           >
-            Start Your Interview — $3.99
+            {getTranslation(landing.finalCta.cta, lang)} — $3.99
             <motion.span
               className="inline-block ml-2"
               animate={{ x: [0, 4, 0] }}
@@ -64,7 +67,7 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
           </Button>
           <p className="text-primary-200 text-sm">
             <span className="line-through opacity-60">$5</span>{' '}
-            Early access pricing · No subscription
+            {getTranslation(landing.finalCta.pricing, lang)}
           </p>
         </motion.div>
       </div>

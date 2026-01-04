@@ -1,33 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useLanguage, getTranslation, landing } from '@/shared/i18n';
 
-const steps = [
-  {
-    number: '01',
-    title: 'Start the Interview',
-    description: 'Click the button, pay $5, and you\'re in. No account, no friction.',
-    icon: '💳',
-  },
-  {
-    number: '02',
-    title: 'Talk to the AI',
-    description: 'Have a natural 10-minute voice conversation. The AI asks smart questions to uncover your best ideas.',
-    icon: '🎙️',
-  },
-  {
-    number: '03',
-    title: 'Get Your Content Ideas',
-    description: 'Receive 4-7 fully-formed post ideas with titles, descriptions, and platform recommendations.',
-    icon: '✨',
-  },
-  {
-    number: '04',
-    title: 'Download & Create',
-    description: 'Export your ideas as a PDF. Start creating content that actually resonates.',
-    icon: '📄',
-  },
-];
+const stepIcons = ['💳', '🎙️', '✨', '📄'];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -43,6 +19,8 @@ const itemVariants = {
 };
 
 export const HowItWorksSection = () => {
+  const lang = useLanguage();
+
   return (
     <section className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-6">
@@ -54,7 +32,7 @@ export const HowItWorksSection = () => {
             viewport={{ once: true }}
             className="text-primary-600 font-semibold mb-4"
           >
-            HOW IT WORKS
+            {getTranslation(landing.howItWorks.tag, lang)}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -62,10 +40,10 @@ export const HowItWorksSection = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
           >
-            From conversation to content
+            {getTranslation(landing.howItWorks.title1, lang)}
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600">
-              in 10 minutes
+              {getTranslation(landing.howItWorks.title2, lang)}
             </span>
           </motion.h2>
         </div>
@@ -78,32 +56,32 @@ export const HowItWorksSection = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {steps.map((step, index) => (
+          {landing.howItWorks.steps.map((step, index) => (
             <motion.div
-              key={step.number}
+              key={index}
               variants={itemVariants}
               className="relative"
             >
               {/* Connector line */}
-              {index < steps.length - 1 && (
+              {index < landing.howItWorks.steps.length - 1 && (
                 <div className="hidden lg:block absolute top-12 left-[60%] w-full h-0.5 bg-gradient-to-r from-primary-200 to-transparent" />
               )}
 
               <div className="relative bg-gray-50 rounded-2xl p-8 hover:bg-primary-50 transition-colors">
                 {/* Step number */}
                 <span className="absolute -top-4 -left-2 text-6xl font-bold text-primary-100">
-                  {step.number}
+                  0{index + 1}
                 </span>
 
                 {/* Icon */}
-                <div className="relative text-4xl mb-4">{step.icon}</div>
+                <div className="relative text-4xl mb-4">{stepIcons[index]}</div>
 
                 {/* Content */}
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {step.title}
+                  {getTranslation(step.title, lang)}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  {step.description}
+                  {getTranslation(step.description, lang)}
                 </p>
               </div>
             </motion.div>

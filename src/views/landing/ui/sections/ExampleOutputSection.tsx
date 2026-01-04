@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useLanguage, getTranslation, landing } from '@/shared/i18n';
 
 const examplePosts = [
   {
@@ -34,6 +35,8 @@ const examplePosts = [
 ];
 
 export const ExampleOutputSection = () => {
+  const lang = useLanguage();
+
   return (
     <section className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-6">
@@ -45,7 +48,7 @@ export const ExampleOutputSection = () => {
             viewport={{ once: true }}
             className="text-primary-600 font-semibold mb-4"
           >
-            WHAT YOU GET
+            {getTranslation(landing.exampleOutput.tag, lang)}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -53,7 +56,7 @@ export const ExampleOutputSection = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
           >
-            Real ideas, not generic fluff
+            {getTranslation(landing.exampleOutput.title1, lang)}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -62,7 +65,7 @@ export const ExampleOutputSection = () => {
             transition={{ delay: 0.1 }}
             className="text-xl text-gray-600 max-w-2xl mx-auto"
           >
-            Here's what a 10-minute interview might generate for a marketing consultant:
+            {getTranslation(landing.exampleOutput.subtitle, lang)}
           </motion.p>
         </div>
 
@@ -100,7 +103,7 @@ export const ExampleOutputSection = () => {
           viewport={{ once: true }}
           className="text-center text-sm text-gray-500 mt-8"
         >
-          * These are examples. Your ideas will be based on YOUR expertise and insights.
+          {getTranslation(landing.exampleOutput.disclaimer, lang)}
         </motion.p>
       </div>
     </section>

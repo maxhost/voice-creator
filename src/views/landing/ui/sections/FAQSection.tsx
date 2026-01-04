@@ -2,41 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const faqs = [
-  {
-    question: 'How does the voice interview work?',
-    answer: 'After payment, you\'ll enter a voice conversation with our AI interviewer. Just press and hold a button to talk, like a walkie-talkie. The AI asks questions to uncover your best insights, experiences, and perspectives. After 10 minutes, it generates 4-7 content ideas based on what you discussed.',
-  },
-  {
-    question: 'What if I don\'t know what to talk about?',
-    answer: 'That\'s the beauty of it! You don\'t need to prepare anything. The AI is trained to ask thought-provoking questions that pull great content out of you. Just talk about your work, your experiences, and your opinions. The AI does the heavy lifting.',
-  },
-  {
-    question: 'Can I use the ideas for commercial content?',
-    answer: 'Absolutely. You own 100% of the ideas generated. Use them for your business, your clients, or however you want. They\'re yours.',
-  },
-  {
-    question: 'What platforms are the ideas optimized for?',
-    answer: 'We generate ideas for LinkedIn, Twitter/X, Instagram, TikTok, and YouTube. Each idea comes with a platform recommendation based on the content type and format that would work best.',
-  },
-  {
-    question: 'How is this different from ChatGPT?',
-    answer: 'ChatGPT requires you to prompt it. You need to already know what you want to write about. Voice Creator interviews you—it extracts ideas you didn\'t even know you had through conversation. The output is deeply personalized to YOUR expertise, not generic AI content.',
-  },
-  {
-    question: 'What if the session doesn\'t generate enough ideas?',
-    answer: 'We guarantee a minimum of 4 content ideas per session. If your interview generates fewer than 4 ideas due to any issue on our end, you\'ll receive a full refund automatically.',
-  },
-  {
-    question: 'Do I need to create an account?',
-    answer: 'No. Just pay and start. Your interview and ideas are delivered immediately. We don\'t require sign-ups or store unnecessary data.',
-  },
-  {
-    question: 'Is my conversation recorded or stored?',
-    answer: 'Your audio is processed in real-time to generate responses and extract insights. We don\'t store your recordings. Once your session ends and ideas are generated, the audio data is deleted.',
-  },
-];
+import { useLanguage, getTranslation, landing } from '@/shared/i18n';
 
 const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +42,8 @@ const FAQItem = ({ question, answer }: { question: string; answer: string }) => 
 };
 
 export const FAQSection = () => {
+  const lang = useLanguage();
+
   return (
     <section className="py-24 bg-white">
       <div className="max-w-3xl mx-auto px-6">
@@ -87,7 +55,7 @@ export const FAQSection = () => {
             viewport={{ once: true }}
             className="text-primary-600 font-semibold mb-4"
           >
-            FAQ
+            {getTranslation(landing.faq.tag, lang)}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -95,7 +63,7 @@ export const FAQSection = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-gray-900"
           >
-            Questions? Answers.
+            {getTranslation(landing.faq.title, lang)}
           </motion.h2>
         </div>
 
@@ -105,8 +73,12 @@ export const FAQSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          {faqs.map((faq) => (
-            <FAQItem key={faq.question} {...faq} />
+          {landing.faq.items.map((faq, index) => (
+            <FAQItem
+              key={index}
+              question={getTranslation(faq.question, lang)}
+              answer={getTranslation(faq.answer, lang)}
+            />
           ))}
         </motion.div>
       </div>
