@@ -11,16 +11,58 @@ type UserProfile = {
   expertise: string;
 };
 
-const SYSTEM_PROMPT = `Eres un experto en estrategia de contenido para redes sociales.
+const PLATFORM_FORMATS: Record<string, { formats: string[]; description: string }> = {
+  tiktok: {
+    formats: ['video', 'reel'],
+    description: 'Videos verticales cortos (15-60 seg) o reels (hasta 3 min)',
+  },
+  instagram: {
+    formats: ['carousel', 'reel', 'story', 'video'],
+    description: 'Carruseles (posts con múltiples imágenes), reels, stories o videos',
+  },
+  twitter: {
+    formats: ['text', 'thread'],
+    description: 'Tweets individuales o hilos (threads) de múltiples tweets',
+  },
+  linkedin: {
+    formats: ['text', 'carousel', 'video'],
+    description: 'Posts de texto, carruseles PDF/imágenes o videos',
+  },
+  youtube: {
+    formats: ['video'],
+    description: 'Videos largos o cortos (Shorts)',
+  },
+  facebook: {
+    formats: ['text', 'video', 'story', 'reel'],
+    description: 'Posts de texto, videos, stories o reels',
+  },
+};
+
+function buildSystemPrompt(socialNetworks: string[]): string {
+  const platformRules = socialNetworks
+    .map((network) => {
+      const config = PLATFORM_FORMATS[network.toLowerCase()];
+      if (!config) return null;
+      return `- ${network}: Solo usar formatos [${config.formats.join(', ')}]. ${config.description}`;
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  return `Eres un experto en estrategia de contenido para redes sociales.
 Tu tarea es analizar una conversación/entrevista y extraer ideas ÚNICAS y ORIGINALES para posts.
 
 ## REGLAS
 1. Genera entre 4 y 7 ideas de contenido
 2. Cada idea debe ser ÚNICA y diferente a las demás
 3. Basa las ideas en lo que el usuario REALMENTE dijo (experiencias, opiniones, conocimientos)
-4. Adapta el formato al tipo de red social
-5. Los títulos deben ser hooks que capturen atención
-6. Las descripciones deben explicar brevemente el contenido del post
+4. Los títulos deben ser hooks que capturen atención
+5. Las descripciones deben explicar brevemente el contenido del post
+
+## FORMATOS POR PLATAFORMA (MUY IMPORTANTE)
+${platformRules}
+
+NUNCA sugieras un formato que no sea compatible con la plataforma indicada.
+Por ejemplo: NO uses "thread" para TikTok, NO uses "reel" para Twitter.
 
 ## FORMATO DE RESPUESTA (JSON)
 Responde ÚNICAMENTE con un array JSON válido, sin texto adicional:
@@ -34,6 +76,7 @@ Responde ÚNICAMENTE con un array JSON válido, sin texto adicional:
     "suggestedHooks": ["hook alternativo 1", "hook alternativo 2"]
   }
 ]`;
+}
 
 function buildUserPrompt(turns: Turn[], userProfile: UserProfile): string {
   const conversation = turns
@@ -67,10 +110,11 @@ export async function POST(request: NextRequest) {
     }
 
     const openai = getOpenAI();
+    const systemPrompt = buildSystemPrompt(userProfile.socialNetworks);
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: systemPrompt },
         { role: 'user', content: buildUserPrompt(turns, userProfile) },
       ],
       max_tokens: 2000,

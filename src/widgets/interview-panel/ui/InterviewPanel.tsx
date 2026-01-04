@@ -4,6 +4,7 @@ import { RecordButton, TranscriptDisplay, TimerDisplay, ThinkingIndicator } from
 import { useInterviewPanel } from '../model/useInterviewPanel';
 import { TIMER_WARNING_THRESHOLD_SECONDS } from '@/shared/config/constants';
 import { useLanguage, useTranslations } from '@/shared/i18n';
+import { useIsMobile } from '@/shared/lib';
 
 // Status banner component
 const StatusBanner = ({
@@ -65,6 +66,7 @@ export const InterviewPanel = () => {
 
   const lang = useLanguage();
   const { interview } = useTranslations(lang);
+  const isMobile = useIsMobile();
   const isInWarningZone = timeRemaining > 0 && timeRemaining <= TIMER_WARNING_THRESHOLD_SECONDS;
 
   // Determine current status
@@ -181,7 +183,7 @@ export const InterviewPanel = () => {
 
       <div className="text-center">
         <p className="text-xs text-gray-400">
-          {interview.panel.instructions}
+          {isMobile ? interview.panel.instructionsMobile : interview.panel.instructionsDesktop}
         </p>
       </div>
     </div>

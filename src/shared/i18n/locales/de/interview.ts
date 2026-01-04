@@ -28,7 +28,8 @@ export const interview = {
       aiSpeaking: 'KI spricht...',
       processing: 'Wird verarbeitet...',
     },
-    instructions: 'Klicken und halten · Berühren und halten · Oder Leertaste drücken',
+    instructionsDesktop: 'Leertaste gedrückt halten zum Sprechen',
+    instructionsMobile: 'Taste gedrückt halten zum Sprechen',
   },
   onboarding: {
     title: 'Bevor wir starten...',

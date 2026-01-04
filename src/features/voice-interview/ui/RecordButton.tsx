@@ -117,25 +117,21 @@ export const RecordButton = ({
     };
   }, [disabled, isProcessing, onStart]);
 
-  const handleMouseDown = () => {
-    if (disabled || isProcessing) return;
-    isActiveRef.current = true;
-    onStart();
-  };
-
-  const handleMouseUp = () => {
-    if (!isActiveRef.current) return;
-    handleStop();
-  };
-
+  // Touch handlers for mobile only
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault(); // Prevent ghost clicks on mobile
-    if (disabled || isProcessing) return;
+    e.preventDefault();
+    if (disabled || isProcessing || isActiveRef.current) return;
     isActiveRef.current = true;
     onStart();
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    if (!isActiveRef.current) return;
+    handleStop();
+  };
+
+  const handleTouchCancel = (e: React.TouchEvent) => {
     e.preventDefault();
     if (!isActiveRef.current) return;
     handleStop();
@@ -167,11 +163,9 @@ export const RecordButton = ({
         }
       `}</style>
       <button
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
         disabled={disabled || isProcessing}
         className={`w-28 h-28 rounded-full transition-all duration-200 flex items-center justify-center
                     ${getButtonStyle()}

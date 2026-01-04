@@ -28,7 +28,8 @@ export const interview = {
       aiSpeaking: 'IA está falando...',
       processing: 'Processando...',
     },
-    instructions: 'Clique e segure · Toque e segure · Ou pressione a barra de espaço',
+    instructionsDesktop: 'Pressione e segure a barra de espaço para falar',
+    instructionsMobile: 'Segure o botão para falar',
   },
   onboarding: {
     title: 'Antes de começar...',

@@ -40,7 +40,7 @@ export const generatePdf = async (options: PdfGeneratorOptions): Promise<Blob> =
   doc.setTextColor(100, 100, 100);
   doc.text(results.pdf.generatedBy, pageWidth / 2, y, { align: 'center' });
   y += 8;
-  doc.text(`${results.pdf.interviewDuration} ${interviewDuration} | ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, y, { align: 'center' });
+  doc.text(`${results.pdf.interviewDuration} ${interviewDuration} | ${new Date().toLocaleDateString(lang)}`, pageWidth / 2, y, { align: 'center' });
   y += 15;
 
   // Divider line
