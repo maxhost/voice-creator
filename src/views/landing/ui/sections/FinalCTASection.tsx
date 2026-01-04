@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/shared/ui';
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type FinalCTASectionProps = {
   onCtaClick: () => void;
@@ -11,6 +11,7 @@ type FinalCTASectionProps = {
 
 export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps) => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
 
   return (
     <section className="py-24 bg-gradient-to-br from-primary-600 to-purple-700 relative overflow-hidden">
@@ -27,9 +28,9 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
           viewport={{ once: true }}
           className="text-4xl md:text-5xl font-bold text-white mb-6"
         >
-          {getTranslation(landing.finalCta.title1, lang)}
+          {landing.finalCta.title1}
           <br />
-          {getTranslation(landing.finalCta.title2, lang)}
+          {landing.finalCta.title2}
         </motion.h2>
 
         <motion.p
@@ -39,7 +40,7 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
           transition={{ delay: 0.1 }}
           className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto"
         >
-          {getTranslation(landing.finalCta.subtitle, lang)}
+          {landing.finalCta.subtitle}
         </motion.p>
 
         <motion.div
@@ -56,7 +57,7 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
             loading={isLoading}
             className="bg-white hover:bg-gray-100 text-gray-900"
           >
-            {getTranslation(landing.finalCta.cta, lang)} — $3.99
+            {landing.finalCta.cta} — $3.99
             <motion.span
               className="inline-block ml-2"
               animate={{ x: [0, 4, 0] }}
@@ -67,7 +68,7 @@ export const FinalCTASection = ({ onCtaClick, isLoading }: FinalCTASectionProps)
           </Button>
           <p className="text-primary-200 text-sm">
             <span className="line-through opacity-60">$5</span>{' '}
-            {getTranslation(landing.finalCta.pricing, lang)}
+            {landing.finalCta.pricing}
           </p>
         </motion.div>
       </div>

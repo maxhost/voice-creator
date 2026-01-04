@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +43,7 @@ const FAQItem = ({ question, answer }: { question: string; answer: string }) => 
 
 export const FAQSection = () => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
 
   return (
     <section className="py-24 bg-white">
@@ -55,7 +56,7 @@ export const FAQSection = () => {
             viewport={{ once: true }}
             className="text-primary-600 font-semibold mb-4"
           >
-            {getTranslation(landing.faq.tag, lang)}
+            {landing.faq.tag}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -63,7 +64,7 @@ export const FAQSection = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-gray-900"
           >
-            {getTranslation(landing.faq.title, lang)}
+            {landing.faq.title}
           </motion.h2>
         </div>
 
@@ -76,8 +77,8 @@ export const FAQSection = () => {
           {landing.faq.items.map((faq, index) => (
             <FAQItem
               key={index}
-              question={getTranslation(faq.question, lang)}
-              answer={getTranslation(faq.answer, lang)}
+              question={faq.question}
+              answer={faq.answer}
             />
           ))}
         </motion.div>

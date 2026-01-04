@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 const benefitIcons = [
   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,6 +26,7 @@ const benefitIcons = [
 
 export const BenefitsSection = () => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
   return (
     <section className="py-24 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6">
@@ -37,7 +38,7 @@ export const BenefitsSection = () => {
             viewport={{ once: true }}
             className="text-primary-600 font-semibold mb-4"
           >
-            {getTranslation(landing.benefits.tag, lang)}
+            {landing.benefits.tag}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -45,10 +46,10 @@ export const BenefitsSection = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
           >
-            {getTranslation(landing.benefits.title1, lang)}
+            {landing.benefits.title1}
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600">
-              {getTranslation(landing.benefits.title2, lang)}
+              {landing.benefits.title2}
             </span>
           </motion.h2>
           <motion.p
@@ -58,7 +59,7 @@ export const BenefitsSection = () => {
             transition={{ delay: 0.1 }}
             className="text-xl text-gray-600 max-w-2xl mx-auto"
           >
-            {getTranslation(landing.benefits.subtitle, lang)}
+            {landing.benefits.subtitle}
           </motion.p>
         </div>
 
@@ -78,10 +79,10 @@ export const BenefitsSection = () => {
                 {benefitIcons[index]}
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">
-                {getTranslation(benefit.title, lang)}
+                {benefit.title}
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                {getTranslation(benefit.description, lang)}
+                {benefit.description}
               </p>
             </motion.div>
           ))}

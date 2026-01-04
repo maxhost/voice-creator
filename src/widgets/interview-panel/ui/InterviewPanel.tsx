@@ -3,7 +3,7 @@
 import { RecordButton, TranscriptDisplay, TimerDisplay, ThinkingIndicator } from '@/features/voice-interview';
 import { useInterviewPanel } from '../model/useInterviewPanel';
 import { TIMER_WARNING_THRESHOLD_SECONDS } from '@/shared/config/constants';
-import { useLanguage, getTranslation, interview } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 // Status banner component
 const StatusBanner = ({
@@ -64,6 +64,7 @@ export const InterviewPanel = () => {
   } = useInterviewPanel();
 
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
   const isInWarningZone = timeRemaining > 0 && timeRemaining <= TIMER_WARNING_THRESHOLD_SECONDS;
 
   // Determine current status
@@ -93,7 +94,7 @@ export const InterviewPanel = () => {
           <div className="flex items-center justify-center gap-3">
             <div className="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
             <p className="text-primary-700 font-medium">
-              {getTranslation(interview.panel.timeUp, lang)}
+              {interview.panel.timeUp}
             </p>
           </div>
         </div>
@@ -111,25 +112,25 @@ export const InterviewPanel = () => {
       <div className="flex justify-center">
         {status === 'your-turn' && (
           <StatusBanner type="your-turn">
-            {getTranslation(interview.panel.status.yourTurn, lang)}
+            {interview.panel.status.yourTurn}
           </StatusBanner>
         )}
         {status === 'recording' && (
           <div className="flex items-center justify-center gap-2 px-4 py-2 rounded-full border-2 bg-red-100 border-red-400 text-red-800">
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             <span className="font-medium text-sm">
-              {getTranslation(interview.panel.status.recording, lang)}
+              {interview.panel.status.recording}
             </span>
           </div>
         )}
         {status === 'ai-speaking' && (
           <StatusBanner type="ai-speaking">
-            {getTranslation(interview.panel.status.aiSpeaking, lang)}
+            {interview.panel.status.aiSpeaking}
           </StatusBanner>
         )}
         {status === 'processing' && (
           <StatusBanner type="processing">
-            {getTranslation(interview.panel.status.processing, lang)}
+            {interview.panel.status.processing}
           </StatusBanner>
         )}
       </div>
@@ -138,7 +139,7 @@ export const InterviewPanel = () => {
       {isInWarningZone && (
         <div className="bg-red-50 border-2 border-red-400 rounded-lg p-3 text-center animate-pulse">
           <p className="text-sm font-semibold text-red-700">
-            ⚠️ {getTranslation(interview.panel.lastResponseWarning, lang)}
+            ⚠️ {interview.panel.lastResponseWarning}
           </p>
         </div>
       )}
@@ -146,7 +147,7 @@ export const InterviewPanel = () => {
       {turns.length === 0 && !isTimeUp && status === 'your-turn' && !isInWarningZone && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
           <p className="text-sm text-blue-700">
-            {getTranslation(interview.panel.languageHint, lang)}
+            {interview.panel.languageHint}
           </p>
         </div>
       )}
@@ -180,7 +181,7 @@ export const InterviewPanel = () => {
 
       <div className="text-center">
         <p className="text-xs text-gray-400">
-          {getTranslation(interview.panel.instructions, lang)}
+          {interview.panel.instructions}
         </p>
       </div>
     </div>

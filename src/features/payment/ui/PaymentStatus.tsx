@@ -1,7 +1,7 @@
 'use client';
 
 import type { PaymentStatus as PaymentStatusType } from '../model/types';
-import { useLanguage, getTranslation, payment } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type PaymentStatusProps = {
   status: PaymentStatusType;
@@ -10,6 +10,7 @@ type PaymentStatusProps = {
 
 export const PaymentStatus = ({ status, error }: PaymentStatusProps) => {
   const lang = useLanguage();
+  const { payment } = useTranslations(lang);
 
   if (status === 'idle') return null;
 
@@ -17,27 +18,27 @@ export const PaymentStatus = ({ status, error }: PaymentStatusProps) => {
     <div className="text-center">
       {status === 'redirecting' && (
         <p className="text-gray-500">
-          {getTranslation(payment.status.redirecting, lang)}
+          {payment.status.redirecting}
         </p>
       )}
       {status === 'verifying' && (
         <p className="text-gray-500">
-          {getTranslation(payment.status.verifying, lang)}
+          {payment.status.verifying}
         </p>
       )}
       {status === 'paid' && (
         <p className="text-green-600">
-          {getTranslation(payment.status.confirmed, lang)}
+          {payment.status.confirmed}
         </p>
       )}
       {status === 'used' && (
         <p className="text-yellow-600">
-          {getTranslation(payment.status.sessionUsed, lang)}
+          {payment.status.sessionUsed}
         </p>
       )}
       {status === 'error' && (
         <p className="text-red-600">
-          {error || getTranslation(payment.status.error, lang)}
+          {error || payment.status.error}
         </p>
       )}
     </div>

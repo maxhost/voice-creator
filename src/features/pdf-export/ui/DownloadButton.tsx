@@ -1,6 +1,6 @@
 'use client';
 
-import { useLanguage, getTranslation, results } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type DownloadButtonProps = {
   onClick: () => void;
@@ -14,6 +14,7 @@ export const DownloadButton = ({
   loading = false,
 }: DownloadButtonProps) => {
   const lang = useLanguage();
+  const { results } = useTranslations(lang);
 
   return (
     <button
@@ -27,12 +28,12 @@ export const DownloadButton = ({
       {loading ? (
         <>
           <span className="animate-spin">↻</span>
-          {getTranslation(results.pdf.generating, lang)}
+          {results.pdf.generating}
         </>
       ) : (
         <>
           <span>↓</span>
-          {getTranslation(results.pdf.download, lang)}
+          {results.pdf.download}
         </>
       )}
     </button>

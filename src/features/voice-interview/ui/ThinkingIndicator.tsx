@@ -1,7 +1,6 @@
 'use client';
 
-import { useLanguage, getTranslation } from '@/shared/i18n';
-import { interview } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type ThinkingIndicatorProps = {
   isVisible: boolean;
@@ -13,10 +12,11 @@ export const ThinkingIndicator = ({
   message,
 }: ThinkingIndicatorProps) => {
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   if (!isVisible) return null;
 
-  const displayMessage = message || getTranslation(interview.thinking, lang);
+  const displayMessage = message || interview.thinking;
 
   return (
     <div className="flex items-center justify-center gap-2 text-gray-500">

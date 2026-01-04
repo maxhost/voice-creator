@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 const examplePosts = [
   {
@@ -36,6 +36,7 @@ const examplePosts = [
 
 export const ExampleOutputSection = () => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
 
   return (
     <section className="py-24 bg-white">
@@ -48,7 +49,7 @@ export const ExampleOutputSection = () => {
             viewport={{ once: true }}
             className="text-primary-600 font-semibold mb-4"
           >
-            {getTranslation(landing.exampleOutput.tag, lang)}
+            {landing.exampleOutput.tag}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -56,7 +57,7 @@ export const ExampleOutputSection = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
           >
-            {getTranslation(landing.exampleOutput.title1, lang)}
+            {landing.exampleOutput.title1}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -65,7 +66,7 @@ export const ExampleOutputSection = () => {
             transition={{ delay: 0.1 }}
             className="text-xl text-gray-600 max-w-2xl mx-auto"
           >
-            {getTranslation(landing.exampleOutput.subtitle, lang)}
+            {landing.exampleOutput.subtitle}
           </motion.p>
         </div>
 
@@ -103,7 +104,7 @@ export const ExampleOutputSection = () => {
           viewport={{ once: true }}
           className="text-center text-sm text-gray-500 mt-8"
         >
-          {getTranslation(landing.exampleOutput.disclaimer, lang)}
+          {landing.exampleOutput.disclaimer}
         </motion.p>
       </div>
     </section>

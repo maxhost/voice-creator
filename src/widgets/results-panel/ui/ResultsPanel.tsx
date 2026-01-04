@@ -3,7 +3,7 @@
 import { PostList } from '@/features/post-generation';
 import { DownloadButton } from '@/features/pdf-export';
 import { useResultsPanel } from '../model/useResultsPanel';
-import { useLanguage, getTranslation, results } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 export const ResultsPanel = () => {
   const {
@@ -14,19 +14,20 @@ export const ResultsPanel = () => {
     handleNewInterview,
   } = useResultsPanel();
   const lang = useLanguage();
+  const { results } = useTranslations(lang);
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
         <h1 className="text-3xl font-bold text-gray-900">
-          {getTranslation(results.panel.title, lang)}
+          {results.panel.title}
         </h1>
         <p className="text-gray-600">
           {posts.length} {posts.length === 1
-            ? getTranslation(results.panel.ideasGenerated.singular, lang)
-            : getTranslation(results.panel.ideasGenerated.plural, lang)
-          } {getTranslation(results.panel.basedOnInterview, lang)}
+            ? results.panel.ideasGenerated.singular
+            : results.panel.ideasGenerated.plural
+          } {results.panel.basedOnInterview}
         </p>
       </div>
 
@@ -51,12 +52,12 @@ export const ResultsPanel = () => {
           {isRedirecting ? (
             <>
               <span className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
-              {getTranslation(results.panel.redirecting, lang)}
+              {results.panel.redirecting}
             </>
           ) : (
             <>
               <span>+</span>
-              {getTranslation(results.panel.newInterview, lang)}
+              {results.panel.newInterview}
             </>
           )}
         </button>

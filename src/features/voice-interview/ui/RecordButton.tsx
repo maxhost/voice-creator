@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useLanguage, getTranslation } from '@/shared/i18n';
-import { interview } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 // Microphone icon (idle state)
 const MicIcon = () => (
@@ -61,6 +60,7 @@ export const RecordButton = ({
 }: RecordButtonProps) => {
   const [showSent, setShowSent] = useState(false);
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
   // Use ref to track recording state for event handlers (avoids stale closure)
   const isRecordingRef = useRef(false);
   const isActiveRef = useRef(false); // Track if user is actively holding button
@@ -180,10 +180,10 @@ export const RecordButton = ({
                     focus:outline-none focus:ring-4 focus:ring-primary-300`}
         aria-label={
           isRecording
-            ? getTranslation(interview.recordButton.recording, lang)
+            ? interview.recordButton.recording
             : isProcessing
-            ? getTranslation(interview.recordButton.processing, lang)
-            : getTranslation(interview.recordButton.holdToRecord, lang)
+            ? interview.recordButton.processing
+            : interview.recordButton.holdToRecord
         }
       >
         {getIcon()}

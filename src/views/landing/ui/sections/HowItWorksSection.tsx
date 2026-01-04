@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 const stepIcons = ['💳', '🎙️', '✨', '📄'];
 
@@ -20,6 +20,7 @@ const itemVariants = {
 
 export const HowItWorksSection = () => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
 
   return (
     <section className="py-24 bg-white">
@@ -32,7 +33,7 @@ export const HowItWorksSection = () => {
             viewport={{ once: true }}
             className="text-primary-600 font-semibold mb-4"
           >
-            {getTranslation(landing.howItWorks.tag, lang)}
+            {landing.howItWorks.tag}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -40,10 +41,10 @@ export const HowItWorksSection = () => {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
           >
-            {getTranslation(landing.howItWorks.title1, lang)}
+            {landing.howItWorks.title1}
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600">
-              {getTranslation(landing.howItWorks.title2, lang)}
+              {landing.howItWorks.title2}
             </span>
           </motion.h2>
         </div>
@@ -78,10 +79,10 @@ export const HowItWorksSection = () => {
 
                 {/* Content */}
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {getTranslation(step.title, lang)}
+                  {step.title}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  {getTranslation(step.description, lang)}
+                  {step.description}
                 </p>
               </div>
             </motion.div>

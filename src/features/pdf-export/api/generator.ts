@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import type { Post } from '@/entities/post';
-import { getBrowserLanguage, results } from '@/shared/i18n';
+import { getBrowserLanguage } from '@/shared/i18n';
+import { locales } from '@/shared/i18n';
 
 type PdfGeneratorOptions = {
   posts: Post[];
@@ -10,6 +11,7 @@ type PdfGeneratorOptions = {
 export const generatePdf = async (options: PdfGeneratorOptions): Promise<Blob> => {
   const { posts, interviewDuration } = options;
   const lang = getBrowserLanguage();
+  const { results } = locales[lang] || locales.en;
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const margin = 20;
@@ -29,16 +31,16 @@ export const generatePdf = async (options: PdfGeneratorOptions): Promise<Blob> =
   // Title
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
-  doc.text(results.pdf.title[lang], pageWidth / 2, y, { align: 'center' });
+  doc.text(results.pdf.title, pageWidth / 2, y, { align: 'center' });
   y += 12;
 
   // Subtitle
   doc.setFontSize(12);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 100, 100);
-  doc.text(results.pdf.generatedBy[lang], pageWidth / 2, y, { align: 'center' });
+  doc.text(results.pdf.generatedBy, pageWidth / 2, y, { align: 'center' });
   y += 8;
-  doc.text(`${results.pdf.interviewDuration[lang]} ${interviewDuration} | ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, y, { align: 'center' });
+  doc.text(`${results.pdf.interviewDuration} ${interviewDuration} | ${new Date().toLocaleDateString('es-ES')}`, pageWidth / 2, y, { align: 'center' });
   y += 15;
 
   // Divider line
@@ -60,7 +62,7 @@ export const generatePdf = async (options: PdfGeneratorOptions): Promise<Blob> =
     doc.text(`#${index + 1}`, margin, y);
 
     const platform = results.postCard.platforms[post.platform as keyof typeof results.postCard.platforms] || post.platform;
-    const contentType = results.postCard.contentTypes[post.contentType as keyof typeof results.postCard.contentTypes]?.[lang] || post.contentType;
+    const contentType = results.postCard.contentTypes[post.contentType as keyof typeof results.postCard.contentTypes] || post.contentType;
     doc.text(`${platform} • ${contentType}`, pageWidth - margin, y, { align: 'right' });
     y += 8;
 
@@ -101,7 +103,7 @@ export const generatePdf = async (options: PdfGeneratorOptions): Promise<Blob> =
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(120, 120, 120);
-      doc.text(results.pdf.alternativeHooks[lang], margin, y);
+      doc.text(results.pdf.alternativeHooks, margin, y);
       y += 5;
 
       post.suggestedHooks.slice(0, 2).forEach((hook) => {
@@ -130,7 +132,7 @@ export const generatePdf = async (options: PdfGeneratorOptions): Promise<Blob> =
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(150, 150, 150);
     doc.text(
-      `voice-creator.com | ${results.pdf.pageOf[lang]} ${i} ${results.pdf.of[lang]} ${pageCount}`,
+      `voice-creator.com | ${results.pdf.pageOf} ${i} ${results.pdf.of} ${pageCount}`,
       pageWidth / 2,
       doc.internal.pageSize.getHeight() - 10,
       { align: 'center' }

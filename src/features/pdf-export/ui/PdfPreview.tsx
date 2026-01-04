@@ -1,7 +1,7 @@
 'use client';
 
 import type { Post } from '@/entities/post';
-import { useLanguage, getTranslation, results } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type PdfPreviewProps = {
   posts: Post[];
@@ -11,6 +11,7 @@ type PdfPreviewProps = {
 
 export const PdfPreview = ({ posts, isVisible, onClose }: PdfPreviewProps) => {
   const lang = useLanguage();
+  const { results } = useTranslations(lang);
 
   if (!isVisible) return null;
 
@@ -19,7 +20,7 @@ export const PdfPreview = ({ posts, isVisible, onClose }: PdfPreviewProps) => {
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">
-            {getTranslation(results.pdf.preview, lang)}
+            {results.pdf.preview}
           </h2>
           <button
             onClick={onClose}

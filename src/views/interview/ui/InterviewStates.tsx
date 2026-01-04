@@ -1,6 +1,6 @@
 'use client';
 
-import { useLanguage, getTranslation, interview } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type StateLayoutProps = {
   children: React.ReactNode;
@@ -14,11 +14,12 @@ const StateLayout = ({ children }: StateLayoutProps) => (
 
 export const LoadingState = () => {
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   return (
     <StateLayout>
       <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto" />
-      <p className="text-gray-600">{getTranslation(interview.states.verifying, lang)}</p>
+      <p className="text-gray-600">{interview.states.verifying}</p>
     </StateLayout>
   );
 };
@@ -30,6 +31,7 @@ type ErrorStateProps = {
 
 export const ErrorState = ({ error, onBack }: ErrorStateProps) => {
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   return (
     <StateLayout>
@@ -37,16 +39,16 @@ export const ErrorState = ({ error, onBack }: ErrorStateProps) => {
         <span className="text-3xl">X</span>
       </div>
       <h1 className="text-2xl font-bold text-gray-900">
-        {getTranslation(interview.states.verificationError, lang)}
+        {interview.states.verificationError}
       </h1>
       <p className="text-gray-600">
-        {error || getTranslation(interview.states.verificationErrorMessage, lang)}
+        {error || interview.states.verificationErrorMessage}
       </p>
       <button
         onClick={onBack}
         className="mt-4 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-default"
       >
-        {getTranslation(interview.states.backToHome, lang)}
+        {interview.states.backToHome}
       </button>
     </StateLayout>
   );
@@ -58,6 +60,7 @@ type UsedStateProps = {
 
 export const UsedState = ({ onBuyNew }: UsedStateProps) => {
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   return (
     <StateLayout>
@@ -65,16 +68,16 @@ export const UsedState = ({ onBuyNew }: UsedStateProps) => {
         <span className="text-3xl">!</span>
       </div>
       <h1 className="text-2xl font-bold text-gray-900">
-        {getTranslation(interview.states.sessionUsed, lang)}
+        {interview.states.sessionUsed}
       </h1>
       <p className="text-gray-600">
-        {getTranslation(interview.states.sessionUsedMessage, lang)}
+        {interview.states.sessionUsedMessage}
       </p>
       <button
         onClick={onBuyNew}
         className="mt-4 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-default"
       >
-        {getTranslation(interview.states.buyNewSession, lang)}
+        {interview.states.buyNewSession}
       </button>
     </StateLayout>
   );
@@ -82,6 +85,7 @@ export const UsedState = ({ onBuyNew }: UsedStateProps) => {
 
 export const GeneratingState = () => {
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   return (
     <StateLayout>
@@ -89,10 +93,10 @@ export const GeneratingState = () => {
         <div className="w-8 h-8 border-3 border-primary-600 border-t-transparent rounded-full animate-spin" />
       </div>
       <h1 className="text-2xl font-bold text-gray-900">
-        {getTranslation(interview.states.generating, lang)}
+        {interview.states.generating}
       </h1>
       <p className="text-gray-600">
-        {getTranslation(interview.states.generatingMessage, lang)}
+        {interview.states.generatingMessage}
       </p>
       <div className="flex justify-center gap-1 pt-4">
         <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />

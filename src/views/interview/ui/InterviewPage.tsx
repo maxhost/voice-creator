@@ -9,7 +9,7 @@ import { OnboardingModal } from '@/widgets/onboarding-modal';
 import { LoadingState, ErrorState, UsedState, GeneratingState } from './InterviewStates';
 import { generatePosts } from '@/features/post-generation';
 import type { UserProfile } from '@/app/model/types';
-import { useLanguage, getTranslation, interview } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type PageState = 'loading' | 'verifying' | 'onboarding' | 'ready' | 'generating' | 'error' | 'used';
 
@@ -25,6 +25,7 @@ export const InterviewPage = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const verificationStarted = useRef(false);
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   const isOnboarding = state.matches('onboarding');
   const isInInterview = state.matches('interview');
@@ -131,11 +132,11 @@ export const InterviewPage = () => {
         <div className="text-center">
           <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm">
             {context.userProfile?.name
-              ? `${getTranslation(interview.page.greeting, lang)}, ${context.userProfile.name}`
-              : getTranslation(interview.page.paymentVerified, lang)}
+              ? `${interview.page.greeting}, ${context.userProfile.name}`
+              : interview.page.paymentVerified}
           </span>
           <h1 className="text-2xl font-bold text-gray-900 mt-4">
-            {getTranslation(interview.page.yourInterview, lang)}
+            {interview.page.yourInterview}
           </h1>
         </div>
 

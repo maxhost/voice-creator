@@ -1,12 +1,3 @@
-export {
-  type SupportedLanguage,
-  SUPPORTED_LANGUAGES,
-  getBrowserLanguage,
-  t,
-  landing,
-  interview,
-  results,
-  payment,
-} from './translations';
-
-export { useLanguage, getTranslation } from './useTranslation';
+export { type SupportedLanguage, SUPPORTED_LANGUAGES, getBrowserLanguage } from './types';
+export { locales } from './locales';
+export { useLanguage, useTranslations } from './useTranslation';

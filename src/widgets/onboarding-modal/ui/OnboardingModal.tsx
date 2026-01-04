@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useLanguage, getTranslation } from '@/shared/i18n';
-import { interview } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 import type { SocialNetwork, UserProfile } from '@/app/model/types';
 
 const SOCIAL_NETWORKS: { id: SocialNetwork; label: string; icon: string }[] = [
@@ -24,6 +23,7 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
   const [expertise, setExpertise] = useState('');
 
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   const toggleNetwork = (network: SocialNetwork) => {
     setSelectedNetworks((prev) =>
@@ -52,31 +52,31 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
         <div className="p-6 space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900">
-              {getTranslation(interview.onboarding.title, lang)}
+              {interview.onboarding.title}
             </h2>
             <p className="text-gray-600 mt-2">
-              {getTranslation(interview.onboarding.subtitle, lang)}
+              {interview.onboarding.subtitle}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                {getTranslation(interview.onboarding.nameLabel, lang)}
+                {interview.onboarding.nameLabel}
               </label>
               <input
                 type="text"
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={getTranslation(interview.onboarding.namePlaceholder, lang)}
+                placeholder={interview.onboarding.namePlaceholder}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {getTranslation(interview.onboarding.networksLabel, lang)}
+                {interview.onboarding.networksLabel}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {SOCIAL_NETWORKS.map((network) => (
@@ -96,19 +96,19 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
                 ))}
               </div>
               {selectedNetworks.length === 0 && (
-                <p className="text-sm text-gray-500 mt-2">{getTranslation(interview.onboarding.networksHint, lang)}</p>
+                <p className="text-sm text-gray-500 mt-2">{interview.onboarding.networksHint}</p>
               )}
             </div>
 
             <div>
               <label htmlFor="expertise" className="block text-sm font-medium text-gray-700 mb-2">
-                {getTranslation(interview.onboarding.expertiseLabel, lang)}
+                {interview.onboarding.expertiseLabel}
               </label>
               <textarea
                 id="expertise"
                 value={expertise}
                 onChange={(e) => setExpertise(e.target.value.slice(0, 400))}
-                placeholder={getTranslation(interview.onboarding.expertisePlaceholder, lang)}
+                placeholder={interview.onboarding.expertisePlaceholder}
                 rows={3}
                 maxLength={400}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none text-gray-900"
@@ -127,7 +127,7 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
             >
-              {getTranslation(interview.onboarding.submit, lang)}
+              {interview.onboarding.submit}
             </button>
           </form>
         </div>

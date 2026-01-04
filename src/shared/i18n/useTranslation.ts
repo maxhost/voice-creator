@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getBrowserLanguage, type SupportedLanguage } from './translations';
+import { getBrowserLanguage, type SupportedLanguage } from './types';
+import { locales } from './locales';
 
 /**
- * Hook to get the current language and translation helper
+ * Hook to get the current language
  */
-export function useLanguage() {
+export function useLanguage(): SupportedLanguage {
   const [lang, setLang] = useState<SupportedLanguage>('en');
 
   useEffect(() => {
@@ -17,11 +18,14 @@ export function useLanguage() {
 }
 
 /**
- * Get translation from a translations object
+ * Hook to get translations for a specific page
  */
-export function getTranslation<T extends Record<SupportedLanguage, string>>(
-  translations: T,
-  lang: SupportedLanguage
-): string {
-  return translations[lang] || translations.en;
+export function useTranslations(lang: SupportedLanguage) {
+  const locale = locales[lang] || locales.en;
+  return {
+    landing: locale.landing,
+    interview: locale.interview,
+    results: locale.results,
+    payment: locale.payment,
+  };
 }

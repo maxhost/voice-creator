@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/shared/ui';
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type PricingSectionProps = {
   onCtaClick: () => void;
@@ -11,6 +11,7 @@ type PricingSectionProps = {
 
 export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
   return (
     <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-4xl mx-auto px-6">
@@ -26,23 +27,23 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
               {/* Early access badge */}
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full mb-4">
                 <span className="text-amber-600 text-xs">🚀</span>
-                <span className="text-xs font-medium text-amber-800">{getTranslation(landing.pricing.title, lang)}</span>
+                <span className="text-xs font-medium text-amber-800">{landing.pricing.title}</span>
               </div>
 
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {getTranslation(landing.pricing.subtitle1, lang)}
+                {landing.pricing.subtitle1}
                 <br />
-                {getTranslation(landing.pricing.subtitle2, lang)}
+                {landing.pricing.subtitle2}
               </h2>
               <p className="text-gray-600 mb-8">
-                {getTranslation(landing.pricing.description, lang)}
+                {landing.pricing.description}
               </p>
 
               <div className="flex items-baseline gap-3 mb-2">
                 <span className="text-6xl font-bold text-gray-900">$3.99</span>
                 <span className="text-2xl text-gray-400 line-through">$5</span>
               </div>
-              <p className="text-sm text-gray-500 mb-8">{getTranslation(landing.pricing.perInterview, lang)}</p>
+              <p className="text-sm text-gray-500 mb-8">{landing.pricing.perInterview}</p>
 
               <Button
                 size="lg"
@@ -50,18 +51,18 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
                 loading={isLoading}
                 className="w-full"
               >
-                {getTranslation(landing.pricing.cta, lang)}
+                {landing.pricing.cta}
               </Button>
 
               <p className="text-sm text-gray-500 text-center mt-4">
-                {getTranslation(landing.pricing.securePayment, lang)}
+                {landing.pricing.securePayment}
               </p>
             </div>
 
             {/* Right side - What's included */}
             <div className="bg-gray-50 p-10 md:p-12">
               <h3 className="text-lg font-bold text-gray-900 mb-6">
-                {getTranslation(landing.pricing.includes, lang)}
+                {landing.pricing.includes}
               </h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -76,7 +77,7 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-700">{getTranslation(landing.pricing.features.interview, lang)}</span>
+                  <span className="text-gray-700">{landing.pricing.features.interview}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg
@@ -90,7 +91,7 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-700">{getTranslation(landing.pricing.features.ideas, lang)}</span>
+                  <span className="text-gray-700">{landing.pricing.features.ideas}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg
@@ -104,7 +105,7 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-700">{getTranslation(landing.pricing.features.platforms, lang)}</span>
+                  <span className="text-gray-700">{landing.pricing.features.platforms}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg
@@ -118,7 +119,7 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-700">{getTranslation(landing.pricing.features.details, lang)}</span>
+                  <span className="text-gray-700">{landing.pricing.features.details}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg
@@ -132,7 +133,7 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-700">{getTranslation(landing.pricing.features.pdf, lang)}</span>
+                  <span className="text-gray-700">{landing.pricing.features.pdf}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <svg
@@ -146,13 +147,13 @@ export const PricingSection = ({ onCtaClick, isLoading }: PricingSectionProps) =
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-700">{getTranslation(landing.pricing.features.noAccount, lang)}</span>
+                  <span className="text-gray-700">{landing.pricing.features.noAccount}</span>
                 </li>
               </ul>
 
               <div className="mt-8 p-4 bg-primary-50 rounded-xl">
                 <p className="text-sm text-primary-800">
-                  <span className="font-semibold">{getTranslation(landing.pricing.guarantee.title, lang)}</span> {getTranslation(landing.pricing.guarantee.description, lang)}
+                  <span className="font-semibold">{landing.pricing.guarantee.title}</span> {landing.pricing.guarantee.description}
                 </p>
               </div>
             </div>

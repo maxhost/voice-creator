@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/shared/ui';
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type HeroSectionProps = {
   onCtaClick: () => void;
@@ -11,6 +11,7 @@ type HeroSectionProps = {
 
 export const HeroSection = ({ onCtaClick, isLoading }: HeroSectionProps) => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
@@ -43,7 +44,7 @@ export const HeroSection = ({ onCtaClick, isLoading }: HeroSectionProps) => {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500" />
           </span>
-          {getTranslation(landing.hero.title1, lang)} {getTranslation(landing.hero.title2, lang)}
+          {landing.hero.title1} {landing.hero.title2}
         </motion.div>
 
         {/* Main headline */}
@@ -53,9 +54,9 @@ export const HeroSection = ({ onCtaClick, isLoading }: HeroSectionProps) => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-6"
         >
-          {getTranslation(landing.hero.subtitle1, lang)}{' '}
+          {landing.hero.subtitle1}{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600">
-            {getTranslation(landing.hero.subtitle2, lang)}
+            {landing.hero.subtitle2}
           </span>
         </motion.h1>
 
@@ -66,9 +67,9 @@ export const HeroSection = ({ onCtaClick, isLoading }: HeroSectionProps) => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed"
         >
-          {getTranslation(landing.hero.description1, lang)}{' '}
-          <span className="font-semibold text-gray-900">{getTranslation(landing.hero.description2, lang)}</span>{' '}
-          {getTranslation(landing.hero.description3, lang)}
+          {landing.hero.description1}{' '}
+          <span className="font-semibold text-gray-900">{landing.hero.description2}</span>{' '}
+          {landing.hero.description3}
         </motion.p>
 
         {/* CTA */}
@@ -84,7 +85,7 @@ export const HeroSection = ({ onCtaClick, isLoading }: HeroSectionProps) => {
             loading={isLoading}
             className="group"
           >
-            {getTranslation(landing.hero.cta, lang)} — $3.99
+            {landing.hero.cta} — $3.99
             <motion.span
               className="inline-block ml-2"
               animate={{ x: [0, 4, 0] }}
@@ -95,8 +96,8 @@ export const HeroSection = ({ onCtaClick, isLoading }: HeroSectionProps) => {
           </Button>
           <p className="text-sm text-gray-500">
             <span className="line-through text-gray-400">$5</span>{' '}
-            <span className="text-primary-600 font-medium">{getTranslation(landing.hero.earlyAccessPricing, lang)}</span>
-            {' '}· {getTranslation(landing.hero.noSubscription, lang)}
+            <span className="text-primary-600 font-medium">{landing.hero.earlyAccessPricing}</span>
+            {' '}· {landing.hero.noSubscription}
           </p>
         </motion.div>
 
@@ -110,11 +111,11 @@ export const HeroSection = ({ onCtaClick, isLoading }: HeroSectionProps) => {
           <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-full">
             <span className="text-amber-600 text-sm">🚀</span>
             <p className="text-sm text-amber-800">
-              <span className="font-semibold">{getTranslation(landing.hero.earlyAccess, lang)}</span> — {getTranslation(landing.hero.beAmongFirst, lang)}
+              <span className="font-semibold">{landing.hero.earlyAccess}</span> — {landing.hero.beAmongFirst}
             </p>
           </div>
           <p className="text-xs text-gray-400">
-            {getTranslation(landing.hero.poweredBy, lang)}
+            {landing.hero.poweredBy}
           </p>
         </motion.div>
       </div>

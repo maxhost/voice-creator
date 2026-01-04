@@ -1,9 +1,10 @@
 'use client';
 
-import { useLanguage, getTranslation, landing } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 export const FooterSection = () => {
   const lang = useLanguage();
+  const { landing } = useTranslations(lang);
   const currentYear = new Date().getFullYear();
 
   return (
@@ -18,25 +19,25 @@ export const FooterSection = () => {
                 <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
               </svg>
             </div>
-            <span className="font-bold text-white">{getTranslation(landing.footer.brand, lang)}</span>
+            <span className="font-bold text-white">{landing.footer.brand}</span>
           </div>
 
           {/* Links */}
           <div className="flex items-center gap-8 text-sm">
             <a href="#" className="text-gray-400 hover:text-white transition-colors">
-              {getTranslation(landing.footer.privacy, lang)}
+              {landing.footer.privacy}
             </a>
             <a href="#" className="text-gray-400 hover:text-white transition-colors">
-              {getTranslation(landing.footer.terms, lang)}
+              {landing.footer.terms}
             </a>
             <a href="mailto:support@voicecreator.ai" className="text-gray-400 hover:text-white transition-colors">
-              {getTranslation(landing.footer.contact, lang)}
+              {landing.footer.contact}
             </a>
           </div>
 
           {/* Copyright */}
           <p className="text-gray-500 text-sm">
-            © {currentYear} {getTranslation(landing.footer.copyright, lang)}
+            © {currentYear} {landing.footer.copyright}
           </p>
         </div>
       </div>

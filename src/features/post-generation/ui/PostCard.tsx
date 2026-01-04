@@ -1,7 +1,7 @@
 'use client';
 
 import type { Post } from '@/entities/post';
-import { useLanguage, getTranslation, results } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 
 type PostCardProps = {
   post: Post;
@@ -19,14 +19,12 @@ const platformColors: Record<string, string> = {
 
 export const PostCard = ({ post, index }: PostCardProps) => {
   const lang = useLanguage();
+  const { results } = useTranslations(lang);
   const colorClass = platformColors[post.platform] || 'text-gray-700 bg-gray-100';
   const platformLabel = results.postCard.platforms[post.platform as keyof typeof results.postCard.platforms] || post.platform;
 
   // Map content type to translation
-  const contentTypeTranslation = results.postCard.contentTypes[post.contentType as keyof typeof results.postCard.contentTypes];
-  const contentTypeLabel = contentTypeTranslation
-    ? getTranslation(contentTypeTranslation, lang)
-    : post.contentType;
+  const contentTypeLabel = results.postCard.contentTypes[post.contentType as keyof typeof results.postCard.contentTypes] || post.contentType;
 
   return (
     <div className="p-6 bg-white border border-gray-200 rounded-xl space-y-4 hover:shadow-lg transition-shadow">
@@ -54,7 +52,7 @@ export const PostCard = ({ post, index }: PostCardProps) => {
 
       <div className="pt-3 flex items-center gap-2 border-t border-gray-100">
         <span className="text-xs text-gray-500 font-medium">
-          {getTranslation(results.postCard.format, lang)}
+          {results.postCard.format}
         </span>
         <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-md font-medium">
           {contentTypeLabel}

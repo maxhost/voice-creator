@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useLanguage, getTranslation } from '@/shared/i18n';
-import { interview } from '@/shared/i18n';
+import { useLanguage, useTranslations } from '@/shared/i18n';
 import type { Turn } from '@/entities/interview-session';
 
 type TranscriptDisplayProps = {
@@ -16,6 +15,7 @@ export const TranscriptDisplay = ({
 }: TranscriptDisplayProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const lang = useLanguage();
+  const { interview } = useTranslations(lang);
 
   // Auto-scroll to bottom when new turns are added
   useEffect(() => {
@@ -27,7 +27,7 @@ export const TranscriptDisplay = ({
   if (turns.length === 0) {
     return (
       <div className="text-center text-gray-400 py-8">
-        {getTranslation(interview.transcript.placeholder, lang)}
+        {interview.transcript.placeholder}
       </div>
     );
   }
@@ -49,8 +49,8 @@ export const TranscriptDisplay = ({
         >
           <div className="text-xs text-gray-500 mb-1">
             {turn.speaker === 'user'
-              ? getTranslation(interview.transcript.you, lang)
-              : getTranslation(interview.transcript.ai, lang)}
+              ? interview.transcript.you
+              : interview.transcript.ai}
           </div>
           <p className="text-sm text-gray-900">{turn.transcript}</p>
         </div>
