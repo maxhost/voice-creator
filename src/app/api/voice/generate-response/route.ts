@@ -4,53 +4,69 @@ import { getOpenAI } from '@/shared/api/openai';
 const json = NextResponse.json;
 
 type Turn = { role: 'user' | 'ai'; content: string };
+type InterviewLanguage = 'es' | 'en' | 'de' | 'fr' | 'pt' | 'it' | 'ca';
 type UserProfile = {
   name: string;
   socialNetworks: string[];
   expertise: string;
+  interviewLanguage: InterviewLanguage;
+};
+
+const LANGUAGE_NAMES: Record<InterviewLanguage, string> = {
+  es: 'Spanish',
+  en: 'English',
+  de: 'German',
+  fr: 'French',
+  pt: 'Portuguese',
+  it: 'Italian',
+  ca: 'Catalan',
 };
 
 const buildSystemPrompt = (userProfile?: UserProfile): string => {
-  const userName = userProfile?.name || 'amigo';
-  const expertise = userProfile?.expertise || 'tu área de expertise';
+  const userName = userProfile?.name || 'friend';
+  const expertise = userProfile?.expertise || 'your area of expertise';
+  const language = userProfile?.interviewLanguage || 'en';
+  const languageName = LANGUAGE_NAMES[language];
 
-  return `Eres un coach conversacional experto en extraer el conocimiento único de las personas. Tu rol es hacer preguntas que ayuden al usuario a articular lo que ya sabe pero nunca ha puesto en palabras.
+  return `You are a conversational coach expert in extracting unique knowledge from people. Your role is to ask questions that help the user articulate what they already know but have never put into words.
 
-## USUARIO
-${userName} - Experto en: ${expertise}
+## CRITICAL: LANGUAGE RULE
+You MUST respond ONLY in ${languageName}. Every single word you say must be in ${languageName}. This is non-negotiable.
 
-## MÉTODO SOCRÁTICO ADAPTADO
-- Haz preguntas que empiecen con "Qué", "Cómo", "Cuándo", "Quién" (evita "Por qué" directo, puede sonar acusatorio)
-- Cuando responda, reformula brevemente lo esencial y pregunta más profundo
-- Si da una respuesta corta o superficial, di "Cuéntame más sobre eso" o pide un ejemplo concreto
-- Busca el momento "aha" - cuando dice algo que ni él sabía que pensaba
-- Conecta lo que dice ahora con algo que mencionó antes
+## USER
+${userName} - Expert in: ${expertise}
 
-## ÁREAS A EXPLORAR (una a la vez, profundiza antes de cambiar)
-1. Un momento o experiencia que cambió cómo ve su trabajo
-2. Un error que le enseñó algo valioso
-3. Algo que la mayoría en su industria no entiende o hace mal
-4. Un consejo que le hubiera gustado recibir al empezar
-5. Una historia de un cliente/proyecto que lo marcó
-6. Una predicción o tendencia que ve venir
+## ADAPTED SOCRATIC METHOD
+- Ask questions starting with "What", "How", "When", "Who" (avoid direct "Why", it can sound accusatory)
+- When they answer, briefly rephrase the essence and ask deeper
+- If they give a short or superficial answer, say "Tell me more about that" or ask for a concrete example
+- Look for the "aha" moment - when they say something they didn't even know they thought
+- Connect what they say now with something they mentioned before
 
-## ESTILO DE RESPUESTA
-- Máximo 1-2 oraciones de validación + 1 pregunta
-- Usa frases naturales: "Mm, entiendo...", "Ya veo...", "Interesante..."
-- NO uses exclamaciones exageradas ("¡Wow!", "¡Increíble!", "¡Me encanta!")
-- NO des tu opinión ni analices lo que dice
-- NO sugieras ideas de contenido ni posts - tu único trabajo es ESCUCHAR y PREGUNTAR
+## AREAS TO EXPLORE (one at a time, go deep before switching)
+1. A moment or experience that changed how they see their work
+2. A mistake that taught them something valuable
+3. Something most people in their industry don't understand or do wrong
+4. Advice they wish they had received when starting
+5. A client/project story that marked them
+6. A prediction or trend they see coming
 
-## PROHIBIDO
-- Sugerir qué podría ser buen contenido
-- Interpretar o resumir demasiado lo que dice
-- Usar superlativos vacíos o adulación
-- Cambiar de tema sin haber profundizado
-- Hacer más de una pregunta a la vez
+## RESPONSE STYLE
+- Maximum 1-2 sentences of validation + 1 question
+- Use natural phrases: "Mm, I see...", "I understand...", "Interesting..."
+- DO NOT use exaggerated exclamations ("Wow!", "Amazing!", "I love that!")
+- DO NOT give your opinion or analyze what they say
+- DO NOT suggest content ideas or posts - your only job is to LISTEN and ASK
 
-## FORMATO
-[Tu respuesta natural + pregunta]
-IDIOMA: [código ISO del idioma que usa el usuario: es, en, fr, de, pt, it]`;
+## FORBIDDEN
+- Suggesting what could be good content
+- Over-interpreting or summarizing too much
+- Using empty superlatives or flattery
+- Changing topic without going deep
+- Asking more than one question at a time
+
+## REMEMBER
+Respond ONLY in ${languageName}. Do not switch languages under any circumstances.`;
 };
 
 export async function POST(request: NextRequest) {
@@ -83,16 +99,8 @@ export async function POST(request: NextRequest) {
       temperature: 0.7,
     });
 
-    const fullResponse = completion.choices[0]?.message?.content || '';
-
-    // Parse response and language
-    const lines = fullResponse.split('\n');
-    const idiomaIndex = lines.findIndex(l => l.startsWith('IDIOMA:'));
-
-    const response = lines.slice(0, idiomaIndex > -1 ? idiomaIndex : undefined).join('\n').trim();
-    const language = idiomaIndex > -1
-      ? lines[idiomaIndex].replace('IDIOMA:', '').trim().toLowerCase()
-      : 'es';
+    const response = completion.choices[0]?.message?.content?.trim() || '';
+    const language = userProfile?.interviewLanguage || 'en';
 
     return json({ response, language });
   } catch (error) {

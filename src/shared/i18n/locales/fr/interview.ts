@@ -40,7 +40,18 @@ export const interview = {
     networksHint: 'Sélectionnez au moins un réseau social',
     expertiseLabel: 'Quels sujets maîtrisez-vous ou souhaitez-vous créer du contenu à leur sujet ?',
     expertisePlaceholder: 'Ex : Marketing digital, productivité, développement personnel, cuisine, fitness...',
+    languageLabel: 'Langue de l\'entretien',
+    languageHint: 'L\'IA parlera et répondra dans cette langue',
     submit: 'Commencer l\'entretien',
+  },
+  languages: {
+    es: 'Espagnol',
+    en: 'Anglais',
+    de: 'Allemand',
+    fr: 'Français',
+    pt: 'Portugais',
+    it: 'Italien',
+    ca: 'Catalan',
   },
   payment: {
     title: 'Commencer l\'entretien',

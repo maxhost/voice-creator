@@ -40,7 +40,18 @@ export const interview = {
     networksHint: 'Wähle mindestens ein Social Network',
     expertiseLabel: 'Zu welchen Themen hast du Fachwissen oder möchtest Content erstellen?',
     expertisePlaceholder: 'Z.B.: Digital Marketing, Produktivität, Persönlichkeitsentwicklung, Kochen, Fitness...',
+    languageLabel: 'Interview-Sprache',
+    languageHint: 'Die KI wird in dieser Sprache sprechen und antworten',
     submit: 'Interview starten',
+  },
+  languages: {
+    es: 'Spanisch',
+    en: 'Englisch',
+    de: 'Deutsch',
+    fr: 'Französisch',
+    pt: 'Portugiesisch',
+    it: 'Italienisch',
+    ca: 'Katalanisch',
   },
   payment: {
     title: 'Interview starten',

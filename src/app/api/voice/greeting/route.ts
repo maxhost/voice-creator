@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOpenAI } from '@/shared/api/openai';
 
+type InterviewLanguage = 'es' | 'en' | 'de' | 'fr' | 'pt' | 'it' | 'ca';
+
 type UserProfile = {
   name: string;
   socialNetworks: string[];
   expertise: string;
+  interviewLanguage: InterviewLanguage;
 };
 
 const VOICE_BY_LANG: Record<string, 'nova' | 'onyx' | 'shimmer'> = {
@@ -14,6 +17,7 @@ const VOICE_BY_LANG: Record<string, 'nova' | 'onyx' | 'shimmer'> = {
   de: 'onyx',
   pt: 'nova',
   it: 'shimmer',
+  ca: 'nova',
 };
 
 const GREETING_TEMPLATES: Record<string, (profile: UserProfile) => string> = {
@@ -28,19 +32,21 @@ const GREETING_TEMPLATES: Record<string, (profile: UserProfile) => string> = {
   pt: (p) => `Olá ${p.name}. Vejo que você trabalha com ${p.expertise} e quer criar conteúdo para ${formatNetworks(p.socialNetworks, 'pt')}. Me conta, como você chegou nessa área?`,
 
   it: (p) => `Ciao ${p.name}. Vedo che lavori in ${p.expertise} e vuoi creare contenuti per ${formatNetworks(p.socialNetworks, 'it')}. Dimmi, come sei arrivato in questo campo?`,
+
+  ca: (p) => `Hola ${p.name}. Veig que treballes en ${p.expertise} i vols crear contingut per a ${formatNetworks(p.socialNetworks, 'ca')}. Explica'm, com vas arribar a dedicar-te a això?`,
 };
 
 const NETWORK_NAMES: Record<string, Record<string, string>> = {
-  instagram: { es: 'Instagram', en: 'Instagram', fr: 'Instagram', de: 'Instagram', pt: 'Instagram', it: 'Instagram' },
-  tiktok: { es: 'TikTok', en: 'TikTok', fr: 'TikTok', de: 'TikTok', pt: 'TikTok', it: 'TikTok' },
-  linkedin: { es: 'LinkedIn', en: 'LinkedIn', fr: 'LinkedIn', de: 'LinkedIn', pt: 'LinkedIn', it: 'LinkedIn' },
-  twitter: { es: 'X', en: 'X', fr: 'X', de: 'X', pt: 'X', it: 'X' },
-  youtube: { es: 'YouTube', en: 'YouTube', fr: 'YouTube', de: 'YouTube', pt: 'YouTube', it: 'YouTube' },
-  facebook: { es: 'Facebook', en: 'Facebook', fr: 'Facebook', de: 'Facebook', pt: 'Facebook', it: 'Facebook' },
+  instagram: { es: 'Instagram', en: 'Instagram', fr: 'Instagram', de: 'Instagram', pt: 'Instagram', it: 'Instagram', ca: 'Instagram' },
+  tiktok: { es: 'TikTok', en: 'TikTok', fr: 'TikTok', de: 'TikTok', pt: 'TikTok', it: 'TikTok', ca: 'TikTok' },
+  linkedin: { es: 'LinkedIn', en: 'LinkedIn', fr: 'LinkedIn', de: 'LinkedIn', pt: 'LinkedIn', it: 'LinkedIn', ca: 'LinkedIn' },
+  twitter: { es: 'X', en: 'X', fr: 'X', de: 'X', pt: 'X', it: 'X', ca: 'X' },
+  youtube: { es: 'YouTube', en: 'YouTube', fr: 'YouTube', de: 'YouTube', pt: 'YouTube', it: 'YouTube', ca: 'YouTube' },
+  facebook: { es: 'Facebook', en: 'Facebook', fr: 'Facebook', de: 'Facebook', pt: 'Facebook', it: 'Facebook', ca: 'Facebook' },
 };
 
 const CONJUNCTIONS: Record<string, string> = {
-  es: ' y ', en: ' and ', fr: ' et ', de: ' und ', pt: ' e ', it: ' e ',
+  es: ' y ', en: ' and ', fr: ' et ', de: ' und ', pt: ' e ', it: ' e ', ca: ' i ',
 };
 
 function formatNetworks(networks: string[], lang: string): string {
@@ -48,32 +54,6 @@ function formatNetworks(networks: string[], lang: string): string {
   if (names.length === 1) return names[0];
   const conj = CONJUNCTIONS[lang] || ' and ';
   return names.slice(0, -1).join(', ') + conj + names[names.length - 1];
-}
-
-function getLanguageFromCode(code: string): string {
-  const lang = code.split('-')[0].toLowerCase();
-  return GREETING_TEMPLATES[lang] ? lang : 'en';
-}
-
-async function detectLanguage(text: string, openai: ReturnType<typeof getOpenAI>): Promise<string> {
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content: 'Detect the language of the text. Respond with ONLY the ISO 639-1 code (es, en, fr, de, pt, it). If unsure, respond with "en".',
-        },
-        { role: 'user', content: text },
-      ],
-      max_tokens: 5,
-      temperature: 0,
-    });
-    const detected = response.choices[0]?.message?.content?.trim().toLowerCase() || 'en';
-    return GREETING_TEMPLATES[detected] ? detected : 'en';
-  } catch {
-    return 'en';
-  }
 }
 
 export async function POST(request: NextRequest) {
@@ -87,9 +67,10 @@ export async function POST(request: NextRequest) {
 
     const openai = getOpenAI();
 
-    // Detect language from the expertise text
-    const lang = await detectLanguage(userProfile.expertise, openai);
-    const greetingText = GREETING_TEMPLATES[lang](userProfile);
+    // Use the interview language selected by user
+    const lang = userProfile.interviewLanguage || 'en';
+    const greetingTemplate = GREETING_TEMPLATES[lang] || GREETING_TEMPLATES['en'];
+    const greetingText = greetingTemplate(userProfile);
     const voice = VOICE_BY_LANG[lang] || 'nova';
 
     const mp3Response = await openai.audio.speech.create({

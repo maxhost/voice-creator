@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useLanguage, useTranslations } from '@/shared/i18n';
-import type { SocialNetwork, UserProfile } from '@/app/model/types';
+import { useState, useEffect } from 'react';
+import { useLanguage, useTranslations, getBrowserLanguage } from '@/shared/i18n';
+import type { SocialNetwork, UserProfile, InterviewLanguage } from '@/app/model/types';
 
 const SOCIAL_NETWORKS: { id: SocialNetwork; label: string; icon: string }[] = [
   { id: 'instagram', label: 'Instagram', icon: '📸' },
@@ -13,17 +13,35 @@ const SOCIAL_NETWORKS: { id: SocialNetwork; label: string; icon: string }[] = [
   { id: 'facebook', label: 'Facebook', icon: '👤' },
 ];
 
+const INTERVIEW_LANGUAGES: InterviewLanguage[] = ['es', 'en', 'de', 'fr', 'pt', 'it', 'ca'];
+
 type OnboardingModalProps = {
   onComplete: (profile: UserProfile) => void;
+};
+
+// Map browser language to interview language (handle pt-BR → pt)
+const getDefaultInterviewLanguage = (): InterviewLanguage => {
+  const browserLang = getBrowserLanguage();
+  if (browserLang === 'pt-BR') return 'pt';
+  if (INTERVIEW_LANGUAGES.includes(browserLang as InterviewLanguage)) {
+    return browserLang as InterviewLanguage;
+  }
+  return 'en';
 };
 
 export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
   const [name, setName] = useState('');
   const [selectedNetworks, setSelectedNetworks] = useState<SocialNetwork[]>([]);
   const [expertise, setExpertise] = useState('');
+  const [interviewLanguage, setInterviewLanguage] = useState<InterviewLanguage>('en');
 
   const lang = useLanguage();
   const { interview } = useTranslations(lang);
+
+  // Set default language based on browser on mount
+  useEffect(() => {
+    setInterviewLanguage(getDefaultInterviewLanguage());
+  }, []);
 
   const toggleNetwork = (network: SocialNetwork) => {
     setSelectedNetworks((prev) =>
@@ -43,6 +61,7 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
       name: name.trim(),
       socialNetworks: selectedNetworks,
       expertise: expertise.trim(),
+      interviewLanguage,
     });
   };
 
@@ -116,6 +135,25 @@ export const OnboardingModal = ({ onComplete }: OnboardingModalProps) => {
               <p className="text-sm text-gray-500 mt-1">
                 {expertise.length}/400
               </p>
+            </div>
+
+            <div>
+              <label htmlFor="interviewLanguage" className="block text-sm font-medium text-gray-700 mb-2">
+                {interview.onboarding.languageLabel}
+              </label>
+              <select
+                id="interviewLanguage"
+                value={interviewLanguage}
+                onChange={(e) => setInterviewLanguage(e.target.value as InterviewLanguage)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white text-gray-900"
+              >
+                {INTERVIEW_LANGUAGES.map((langCode) => (
+                  <option key={langCode} value={langCode}>
+                    {interview.languages[langCode]}
+                  </option>
+                ))}
+              </select>
+              <p className="text-sm text-gray-500 mt-2">{interview.onboarding.languageHint}</p>
             </div>
 
             <button

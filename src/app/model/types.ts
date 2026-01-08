@@ -3,10 +3,13 @@ import type { Post } from '@/entities/post';
 
 export type SocialNetwork = 'instagram' | 'tiktok' | 'linkedin' | 'twitter' | 'youtube' | 'facebook';
 
+export type InterviewLanguage = 'es' | 'en' | 'de' | 'fr' | 'pt' | 'it' | 'ca';
+
 export type UserProfile = {
   name: string;
   socialNetworks: SocialNetwork[];
   expertise: string;
+  interviewLanguage: InterviewLanguage;
 };
 
 /**
