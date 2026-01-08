@@ -27,5 +27,6 @@ export function useTranslations(lang: SupportedLanguage) {
     interview: locale.interview,
     results: locale.results,
     payment: locale.payment,
+    help: locale.help,
   };
 }

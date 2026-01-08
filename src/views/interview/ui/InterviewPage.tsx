@@ -6,6 +6,7 @@ import { usePayment } from '@/features/payment';
 import { useAppMachine } from '@/app/providers';
 import { InterviewPanel } from '@/widgets/interview-panel';
 import { OnboardingModal } from '@/widgets/onboarding-modal';
+import { HelpButton } from '@/widgets/help-button';
 import { LoadingState, ErrorState, UsedState, GeneratingState } from './InterviewStates';
 import { generatePosts } from '@/features/post-generation';
 import type { UserProfile } from '@/app/model/types';
@@ -142,6 +143,9 @@ export const InterviewPage = () => {
 
         <InterviewPanel />
       </div>
+
+      {/* Help button - only visible during interview */}
+      <HelpButton />
     </main>
   );
 };
