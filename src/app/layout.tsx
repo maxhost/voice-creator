@@ -17,6 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
+      <head>
+        {/* 100% privacy-first analytics */}
+        <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+      </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
